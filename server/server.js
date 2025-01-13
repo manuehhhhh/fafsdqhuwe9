@@ -17,11 +17,9 @@ class Mensaje{
 }
 
 class Juego{
-    id;
     jugadores;
     iniciado;
-    constructor(id, nombreJugador){
-        this.id = id;
+    constructor(nombreJugador){
         this.jugadores = [];
         this.jugadores.push(new Jugador(nombreJugador));
         this.iniciado = false;
@@ -100,27 +98,8 @@ class Juego{
     }
   }
   
-  let juegos = [];
-  juegos.push(new Juego('prueba', 'Manuel'));
+  let juegos = new Map();
 
-  function encontrarIndice(idBuscada){
-    let encontrado = false;
-    let i = 0;
-    while ((encontrado == false)&&(i<(juegos.length))){
-      console.log(juegos);
-        if (juegos[i].id == idBuscada){
-            encontrado = true;
-        } else{
-          i++;
-        }
-        
-    }
-    if (encontrado) {
-        return i;
-    } else {
-        return -1;
-    }
-  }
   
   function manejarMensaje(mensaje, socket){
     console.log('Mensaje Recibido');
@@ -144,8 +123,7 @@ class Juego{
           insertarPieza(socket, mensaje);
           break;
       case 'pedir':
-            let indice = encontrarIndice(mensaje.id);
-            devolverJuego(socket, indice);
+            devolverJuego(socket, mensaje.id);
             break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
@@ -159,63 +137,53 @@ class Juego{
   }
   
   function crearJuego(socket, mensaje){
-    let indice = encontrarIndice(mensaje.id);
-    if (indice !== -1){
-      mandarMensaje(socket, 'esta id esta siendo usada');
+    if (!(juegos.has(mensaje.id))){
+      juegos.set(mensaje.id, new Juego(mensaje.jugador));
+      devolverJuego(socket, mensaje.id);
     } else{
-      juegos.push(new Juego(mensaje.id, mensaje.jugador));
-      indice = encontrarIndice(mensaje.id);
-      console.log(indice);
-      devolverJuego(socket, indice);
+      mandarMensaje(socket, 'esta id esta siendo usada');
     }
   }
   
   function unirseJuego(socket, mensaje){
-    let indice = encontrarIndice(mensaje.id);
-    if (indice !== -1){
-      juegos[indice].insertarNuevoJugador(mensaje.jugador);
-      devolverJuego(socket, indice);
+    if (juegos.has(mensaje.id)){
+      juegos.get(mensaje.id).insertarNuevoJugador(mensaje.jugador);
+      devolverJuego(socket, mensaje);
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
   }
   
   function dejarJuego(socket, mensaje){
-    let indice = encontrarIndice(mensaje.id);
-    if (indice !== -1){
-      juegos[indice].eliminarJugador(mensaje.jugador);
-      devolverJuego(socket, indice);
+    if (juegos.has(mensaje.id)){
+      juegos.get(mensaje.id).eliminarJugador(mensaje.jugador);
+      devolverJuego(socket, mensaje.id);
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
   }
   
   function iniciarJuego(mensaje){
-    let indice = encontrarIndice(mensaje.id);
-    if (indice !== -1){
-      juegos[indice].iniciado = true;
-      devolverJuego(socket, indice);
+    if (juegos.has(mensaje.id)){
+      juegos.get(mensaje.id).iniciado = true;
+      devolverJuego(socket, mensaje.id);
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
   }
   
   function realizarJugada(socket, mensaje){
-    let indice = encontrarIndice(mensaje.id);
-    juegos[indice].disparar(mensaje.jugada.jugador, mensaje.jugada.X, mensaje.jugada.Y);
+    juegos.get(mensaje.id).disparar(mensaje.jugada.jugador, mensaje.jugada.X, mensaje.jugada.Y);
     devolverJuego(socket, indice);
   }
   
   function devolverJuego(socket, id){
-    console.log(juegos[id]);
-    let devolucion = JSON.stringify(new Mensaje('tablero', 'estado del juego', juegos[id]));
-    console.log(devolucion);
-    socket.send(devolucion);
+    console.log(juegos.get(id));
+    socket.send(JSON.stringify(juegos.get(id)));
   }
   
   function insertarPieza(socket, mensaje){
-    let indice = encontrarIndice(mensaje.id);
-    juegos[indice].insertarcasilla(mensaje.jugadorAtacado, posicionX, posicionY, mensaje.tipo);
+    juegos.get(mensaje.id).insertarcasilla(mensaje.jugadorAtacado, posicionX, posicionY, mensaje.tipo);
   }
 
   
