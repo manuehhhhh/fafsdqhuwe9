@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="Author" content="Manuel Martinez" />
+        <meta name="Description" content="Jugar Batalla Naval desde 2 a 4 personas" />
+        <meta name="keywords" content="HTML, CSS, JS, Batalla Naval, juego" />
+        <meta name="robots" content="noindex, nofollow" />
+        <!-- 
+        <link rel="stylesheet" href="barraDeNavegacion.css">
+        <link rel="stylesheet" href="tablero.css">
+        -->
+        <link rel="stylesheet" href="./styles/barraDeNavegacion.css">
+        <link rel="stylesheet" href="./styles/tablero.css">
+        
+        <title>Batalla Naval | Instrucciones</title>
+    </head>
+    <body>
+        <header>
+            <h1> <img src="./images/icono-battleship.jpg"> Batalla Naval</h1>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="inicio.html">Inicio</a></li>
+                    <li><a href="instrucciones.html">Instrucciones</a></li>
+                    <li><a href="jugar.html">Jugar</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div id="tablero">
+                      
+            </div>
+
+            <aside>
+                <h2>Establecer Piezas</h2>
+                <h3>Rotar</h3>
+                <ul>
+                    <ul id="lista-de-piezas">
+                        <li>1 portaaviones (abarca 5 casillas)</li>
+                        <li>1 acorazado (4 casillas)</li>
+                        <li>1 crucero (3 casillas)</li>
+                        <li>1 submarino (3 casillas)</li>
+                        <li>1 destructor (2 casillas)</li>
+                    </ul>
+                </ul>
+
+            </aside>
+        
+    </body>
+
+    <script>
+         const WEBSOCKET_SCHEME = 'ws';
+            const WEBSOCKET_SERVER = 'localhost';
+            const WEBSOCKET_PORT = 8000;
+            const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
+            const socket = new WebSocket(WEBSOCKET_URL);
+            console.log(WEBSOCKET_URL);
+            class mensaje{
+                type;
+                id;
+                jugador;
+                constructor(type, id, jugador){
+                    this.type = type;
+                    this.id = id;
+                    this.jugador = jugador;
+                }
+            }
+
+            nombreJugador = "PlaceHolder";
+            juedoId = 1;
+
+            function definirDatos() {
+                let urlParams = new URLSearchParams(window.location.search);
+                nombreJugador = urlParams.get('jugador');
+                id = urlParams.get('id');
+                console.log(nombreJugador);
+                console.log(id);
+            }
+
+            definirDatos();
+    </script>
+</html>

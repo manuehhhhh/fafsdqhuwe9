@@ -1,0 +1,21 @@
+h2{
+    padding: 1%;
+    font-size: 2.5rem;
+    color:aliceblue;
+}
+p{
+    padding: 1%;
+    font-size: 1.8rem;
+    color:aliceblue;
+}
+#primer-parrafo{
+    float: left;
+    width: 70%;
+}
+p a{
+    text-decoration: none;
+    color: aliceblue;
+}
+#imagen{
+    width: 27%;
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="Author" content="Manuel Martinez" />
+        <meta name="Description" content="Jugar Batalla Naval desde 2 a 4 personas" />
+        <meta name="keywords" content="HTML, CSS, JS, Batalla Naval, juego" />
+        <meta name="robots" content="noindex, nofollow" />
+        <!--         
+        <link rel="stylesheet" href="barraDeNavegacion.css">
+        <link rel="stylesheet" href="jugar.css">
+        -->
+        <link rel="stylesheet" href="./styles/barraDeNavegacion.css">
+        <link rel="stylesheet" href="./styles/jugar.css">
+
+        <title>Batalla Naval | Instrucciones</title>
+    </head>
+    <body>
+        <header>
+            <h1> <img src="./images/icono-battleship.jpg"> Batalla Naval</h1>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="inicio.html">Inicio</a></li>
+                    <li><a href="instrucciones.html">Instrucciones</a></li>
+                    <li><a href="jugar.html">Jugar</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <h2>Modos de Juego</h2>
+            <h3>Modo Normal</h3>
+                <ul>
+                    <li>
+                        <h4>Establecer Sala</h4>
+                        <h4><a href="powerUpSelector.html">Crear Sala</a></h4></li>
+                    <li>
+                        <h4>Unirse a Sala</h4>
+                        <form action="#" method="post">
+                            <label for="nombre-jugador">Nombre jugador</label>
+                            <input type="text" name="nombre-jugador" id="nombre-jugador" maxlength="16" placeholder="Manuel Martinez" > 
+                            <label for="sala-ID">ID de la sala</label>
+                            <input type="text" name="sala-ID" id="sala-ID" maxlength="16" placeholder="sala1234" >
+                        </form>
+                        <h4 id="boton-unirse"> Entrar</h4>
+                        <!-- <a href="tablero.html">Entrar</a> -->
+                    </li>
+                </ul>
+            <h3>Modo Torneo</h3>
+            <h3 id="torneo-botton"><a href="torneo.html">Unirse al Torneo Actual</a></h3>
+        </main>
+        
+
+        <script>
+            const WEBSOCKET_SCHEME = 'ws';
+            const WEBSOCKET_SERVER = 'localhost';
+            const WEBSOCKET_PORT = 8000;
+            const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
+            const socket = new WebSocket(WEBSOCKET_URL);
+            console.log(WEBSOCKET_URL);
+            class Mensaje{
+                type;
+                id;
+                jugador;
+                constructor(type, id, jugador){
+                    this.type = type;
+                    this.id = id;
+                    this.jugador = jugador;
+                }
+            }
+
+            function enviarMensaje(tipo, id, jugador){
+                console.log("ldija;");
+                socket.send(JSON.stringify(new Mensaje(tipo, id, jugador)));
+            }
+
+            document.getElementById('boton-unirse').addEventListener('click', () => {
+                tipo = 'join';
+                console.log('dkjfhjak');
+                id = document.getElementById('sala-ID').value;
+                nombre = document.getElementById('nombre-jugador').value;
+                enviarMensaje(tipo, id, nombre);
+
+            })
+            socket.addEventListener('message', (event) =>{
+                mensaje = JSON.parse(event.data);
+                if(mensaje.type === "error") {
+                    console.log(event.descripcion);
+                    alert(mensaje.descripcion);
+                } else {
+                    console.log(mensaje.type);
+                    socket.close();  
+                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id);
+                }
+            })
+
+        </script>
+    </body>
+</html>
