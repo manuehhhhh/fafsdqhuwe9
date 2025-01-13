@@ -186,8 +186,8 @@
                     for (const casilla of linea){
                         console.log(casilla);
                         hijo = document.createElement("div");
-                        hijo.setAttribute("posX", "fasdf");
-                        hijo.setAttribute("posY", "dfadf");
+                        hijo.setAttribute("posX", casilla.posX.toString());
+                        hijo.setAttribute("posY", casilla.posX.toString());
                         hijo.classList.add("position");
                         hijo.classList.add(casilla.tipo);
                         document.getElementById('tablero').appendChild(hijo);
