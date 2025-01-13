@@ -19,9 +19,9 @@ class Mensaje{
 class Juego{
     jugadores;
     iniciado;
-    constructor(nombreJugador){
+    constructor(nombreJugador, socket){
         this.jugadores = [];
-        this.jugadores.push(new Jugador(nombreJugador));
+        this.jugadores.push(new Jugador(nombreJugador, socket));
         this.iniciado = false;
     }
   
@@ -42,21 +42,30 @@ class Juego{
   }
   
   
-    insertarNuevoJugador(nombre){
-      this.jugadores.push(new Jugador(nombre));
+    insertarNuevoJugador(nombre, socket){
+      this.jugadores.push(new Jugador(nombre, socket));
     }
   
     eliminarJugador(nombreEliminado){
       this.jugadores = this.jugadores.filter(nombre !== nombreEliminado);
   }
+
+    devolverJuego(){
+      let estado = JSON.stringify(new Mensaje("tablero", "estado del juego", this));
+      for (const jugador of this.jugadores){
+            jugador.socket.send(estado);
+    }
+    }
   }
   
   class Jugador{
     nombre;
     piezasrestantes;
     tablero;
-    constructor(name){
+    socket;
+    constructor(name, socket){
         this.nombre = name;
+        this.socket = socket;
         this.piezasrestantes = [];
   
         let tabla = [];
@@ -123,7 +132,7 @@ class Juego{
           insertarPieza(socket, mensaje);
           break;
       case 'pedir':
-            devolverJuego(socket, mensaje.id);
+            actualizarJuego(mensaje.id);
             break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
@@ -138,8 +147,8 @@ class Juego{
   
   function crearJuego(socket, mensaje){
     if (!(juegos.has(mensaje.id))){
-      juegos.set(mensaje.id, new Juego(mensaje.jugador));
-      devolverJuego(socket, mensaje.id);
+      juegos.set(mensaje.id, new Juego(mensaje.jugador, socket));
+      actualizarJuego(mensaje.id);
     } else{
       mandarMensaje(socket, 'esta id esta siendo usada');
     }
@@ -147,8 +156,8 @@ class Juego{
   
   function unirseJuego(socket, mensaje){
     if (juegos.has(mensaje.id)){
-      juegos.get(mensaje.id).insertarNuevoJugador(mensaje.jugador);
-      devolverJuego(socket, mensaje);
+      juegos.get(mensaje.id).insertarNuevoJugador(mensaje.jugador, socket);
+      actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
@@ -157,7 +166,7 @@ class Juego{
   function dejarJuego(socket, mensaje){
     if (juegos.has(mensaje.id)){
       juegos.get(mensaje.id).eliminarJugador(mensaje.jugador);
-      devolverJuego(socket, mensaje.id);
+      actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
@@ -166,7 +175,7 @@ class Juego{
   function iniciarJuego(mensaje){
     if (juegos.has(mensaje.id)){
       juegos.get(mensaje.id).iniciado = true;
-      devolverJuego(socket, mensaje.id);
+      actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
@@ -177,9 +186,8 @@ class Juego{
     devolverJuego(socket, indice);
   }
   
-  function devolverJuego(socket, id){
-    console.log(juegos.get(id));
-    socket.send(JSON.stringify(juegos.get(id)));
+  function actualizarJuego(id){
+    juegos.get(id).devolverJuego();
   }
   
   function insertarPieza(socket, mensaje){
@@ -199,8 +207,6 @@ class Juego{
   
     const { socket, response } = Deno.upgradeWebSocket(req); 
 
-  
-  
     // Handle WebSocket events
   
     socket.onopen = () => console.log("Client connected");

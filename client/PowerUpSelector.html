@@ -119,53 +119,53 @@
     </main>
 
         <script>
-            const WEBSOCKET_SCHEME = 'ws';
-            const WEBSOCKET_SERVER = 'localhost';
-            const WEBSOCKET_PORT = 8000;
-            const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
-            const socket = new WebSocket(WEBSOCKET_URL);
-            console.log(WEBSOCKET_URL);
-            class Mensaje{
-                type;
-                id;
-                jugador;
-                constructor(type, id, jugador){
-                    this.type = type;
-                    this.id = id;
-                    this.jugador = jugador;
-                }
-            }
-            function enviarMensaje(tipo, id, jugador){
-                console.log(tipo);
-                console.log(id);
-                console.log(jugador);
-                let mandamos = JSON.stringify(new Mensaje(tipo, id, jugador)); 
-                socket.send(mandamos);
-            }
+        //     const WEBSOCKET_SCHEME = 'ws';
+        //     const WEBSOCKET_SERVER = 'localhost';
+        //     const WEBSOCKET_PORT = 8000;
+        //     const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
+        //     const socket = new WebSocket(WEBSOCKET_URL);
+        //     console.log(WEBSOCKET_URL);
+        //     class Mensaje{
+        //         type;
+        //         id;
+        //         jugador;
+        //         constructor(type, id, jugador){
+        //             this.type = type;
+        //             this.id = id;
+        //             this.jugador = jugador;
+        //         }
+        //     }
+        //     function enviarMensaje(tipo, id, jugador){
+        //         console.log(tipo);
+        //         console.log(id);
+        //         console.log(jugador);
+        //         let mandamos = JSON.stringify(new Mensaje(tipo, id, jugador)); 
+        //         socket.send(mandamos);
+        //     }
 
             document.getElementById('crear-partida').addEventListener('click', () => {
-                tipo = 'create';
-                console.log('dkjfhjak');
+                // tipo = 'create';
+                // console.log('dkjfhjak');
                 id = document.getElementById('sala-ID').value;
                 nombre = document.getElementById('nombre-jugador').value;
-                enviarMensaje(tipo, id, nombre);
+                window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "create=1");
+                // enviarMensaje(tipo, id, nombre);
             })
 
-            socket.addEventListener('open', () => {
-        // Nótese que es posible usar estilos CSS en la consola del navegador:
-            console.log(`%cConectado al servidor en ${WEBSOCKET_URL}`,  'color: #99ff00');
-            });
+        //     socket.addEventListener('open', () => {
+        // // Nótese que es posible usar estilos CSS en la consola del navegador:
+        //     console.log(`%cConectado al servidor en ${WEBSOCKET_URL}`,  'color: #99ff00');
+        //     });
 
-            socket.addEventListener('message', (event) =>{
-                mensaje = JSON.parse(event.data);
-                if(mensaje.type == "error") {
-                    alert(mensaje.descripcion);
-                } else {
-                    console.log(mensaje.type);
-                    socket.close();
-                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id);
-                }
-            });
+            // socket.addEventListener('message', (event) =>{
+            //     mensaje = JSON.parse(event.data);
+            //     if(mensaje.type == "error") {
+            //         alert(mensaje.descripcion);
+            //     } else {
+            //         console.log(mensaje.type);
+            //         socket.close();
+            //     }
+            // });
 
         </script>
     </body>

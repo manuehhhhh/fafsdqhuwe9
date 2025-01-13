@@ -52,47 +52,46 @@
         
 
         <script>
-            const WEBSOCKET_SCHEME = 'ws';
-            const WEBSOCKET_SERVER = 'localhost';
-            const WEBSOCKET_PORT = 8000;
-            const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
-            const socket = new WebSocket(WEBSOCKET_URL);
-            console.log(WEBSOCKET_URL);
-            class Mensaje{
-                type;
-                id;
-                jugador;
-                constructor(type, id, jugador){
-                    this.type = type;
-                    this.id = id;
-                    this.jugador = jugador;
-                }
-            }
+            // const WEBSOCKET_SCHEME = 'ws';
+            // const WEBSOCKET_SERVER = 'localhost';
+            // const WEBSOCKET_PORT = 8000;
+            // const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
+            // const socket = new WebSocket(WEBSOCKET_URL);
+            // console.log(WEBSOCKET_URL);
+            // class Mensaje{
+            //     type;
+            //     id;
+            //     jugador;
+            //     constructor(type, id, jugador){
+            //         this.type = type;
+            //         this.id = id;
+            //         this.jugador = jugador;
+            //     }
+            // }
 
-            function enviarMensaje(tipo, id, jugador){
-                console.log("ldija;");
-                socket.send(JSON.stringify(new Mensaje(tipo, id, jugador)));
-            }
+            // function enviarMensaje(tipo, id, jugador){
+            //     console.log("ldija;");
+            //     socket.send(JSON.stringify(new Mensaje(tipo, id, jugador)));
+            // }
 
             document.getElementById('boton-unirse').addEventListener('click', () => {
-                tipo = 'join';
-                console.log('dkjfhjak');
+                console.log('adfa');
                 id = document.getElementById('sala-ID').value;
                 nombre = document.getElementById('nombre-jugador').value;
-                enviarMensaje(tipo, id, nombre);
+                window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=0");
 
             })
-            socket.addEventListener('message', (event) =>{
-                mensaje = JSON.parse(event.data);
-                if(mensaje.type === "error") {
-                    console.log(event.descripcion);
-                    alert(mensaje.descripcion);
-                } else {
-                    console.log(mensaje.type);
-                    socket.close();  
-                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id);
-                }
-            })
+            // socket.addEventListener('message', (event) =>{
+            //     mensaje = JSON.parse(event.data);
+            //     if(mensaje.type === "error") {
+            //         console.log(event.descripcion);
+            //         alert(mensaje.descripcion);
+            //     } else {
+            //         console.log(mensaje.type);
+            //         socket.close();  
+            //         window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id);
+            //     }
+            // })
 
         </script>
     </body>

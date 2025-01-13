@@ -111,7 +111,7 @@
 
         <script>
 
-const WEBSOCKET_SCHEME = 'ws';
+            const WEBSOCKET_SCHEME = 'ws';
             const WEBSOCKET_SERVER = 'localhost';
             const WEBSOCKET_PORT = 8000;
             const WEBSOCKET_URL = `${WEBSOCKET_SCHEME}://${WEBSOCKET_SERVER}:${WEBSOCKET_PORT}`;
@@ -120,6 +120,7 @@ const WEBSOCKET_SCHEME = 'ws';
 
             nombreJugador = "PlaceHolder";
             juedoId = 1;
+            crear = 1;
             let juego;
             
             class mensaje{
@@ -137,6 +138,7 @@ const WEBSOCKET_SCHEME = 'ws';
                 let urlParams = new URLSearchParams(window.location.search);
                 nombreJugador = urlParams.get('jugador');
                 id = urlParams.get('id');
+                crear = urlParams.get('create');
                 console.log(nombreJugador);
                 console.log(id);
             }
@@ -162,15 +164,17 @@ const WEBSOCKET_SCHEME = 'ws';
                     alert(mensaje.descripcion);
                 } else {
                     juego = mensaje.tablero;
+                    console.log(juego);
                     imprimirTablero(nombreJugador);
                 }
-
             });
 
             socket.addEventListener('open', (event) =>{
-                console.log("dkaj");
-                enviarMensaje('pedir', id, nombreJugador);
-
+                if (crear == "1"){
+                    enviarMensaje("create", id, nombreJugador);
+                } else {
+                    enviarMensaje("join", id, nombreJugador);
+                }
             });
 
             function dibujarTablero(tablero){
@@ -182,8 +186,8 @@ const WEBSOCKET_SCHEME = 'ws';
                     for (const casilla of linea){
                         console.log(casilla);
                         hijo = document.createElement("div");
-                        // hijo.setAtribute("posX", "casilla.posX.toString()");
-                        // hijo.setAtribute("posY", "casilla.posY.toString()");
+                        hijo.setAttribute("posX", "fasdf");
+                        hijo.setAttribute("posY", "dfadf");
                         hijo.classList.add("position");
                         hijo.classList.add(casilla.tipo);
                         document.getElementById('tablero').appendChild(hijo);
