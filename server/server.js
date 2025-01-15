@@ -237,7 +237,8 @@ class Juego{
       if (indice == -1){
         console.log("ejrkjf");
       } else{
-        juegos.get(mensaje.id).jugadores[indice].tablero = mensaje.jugada.table;
+        console.log(mensaje.jugada.tablero);
+        juegos.get(mensaje.id).jugadores[indice].tablero = mensaje.jugada.tablero;
       }
       actualizarJuego(mensaje.id);
   }
