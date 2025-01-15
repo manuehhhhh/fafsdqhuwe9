@@ -56,16 +56,56 @@ class Juego{
             jugador.socket.send(estado);
     }
     }
+
+    usarSonar(jugadorAtacado){
+      let casillaAtacadaX = Math.random(11)+1;
+      let casillaAtacadaY = Math.random(11)+1;
+      let indice = devolverIndiceJugador(jugadorAtacado);
+      this.jugadores[indice].tablero[posAtacadaY][posAtacadaX].visible = true;
+    }
+
+    usarAtaqueAviones(jugadorAtacado){
+      let casillaAtacadaX = Math.random(11)+1;
+      let casillaAtacadaY = Math.random(11)+1;
+      let indice = devolverIndiceJugador(jugadorAtacado);
+      for (let i = 0; i < 5; i++){
+        this.disparar(jugadroAtacado, casillaAtacadaX, casillaAtacadaY);
+        casillaAtacadaX = Math.random(11)+1;
+        casillaAtacadaY = Math.random(11)+1;
+      }
+    }
+
+    usarMisilCrucero(jugadorAtacado, casillaAtacadaX, casillaAtacadaY) {
+      let indice = devolverIndiceJugador(jugadorAtacado);
+      this.disparar(jugadroAracado, casillaAtacadaX, casillaAtacadaY);
+      this.disparar(jugadroAracado, casillaAtacadaX+1, casillaAtacadaY);
+      this.disparar(jugadroAracado, casillaAtacadaX-1, casillaAtacadaY);
+      this.disparar(jugadroAracado, casillaAtacadaX, casillaAtacadaY+1);
+      this.disparar(jugadroAracado, casillaAtacadaX, casillaAtacadaY-1);
+      this.disparar(jugadroAracado, casillaAtacadaX+1, casillaAtacadaY+1);
+      this.disparar(jugadroAracado, casillaAtacadaX-1, casillaAtacadaY-1);
+      this.disparar(jugadroAracado, casillaAtacadaX+1, casillaAtacadaY-1);
+      this.disparar(jugadroAracado, casillaAtacadaX-1, casillaAtacadaY+1);
+    }
+
+    usarAtaqueEMP(jugadorAtacado){
+      let indice = devolverIndiceJugador(jugadorAtacado);
+      this.jugadores[indice].timeOut+=3;
+    }
   }
   
   class Jugador{
     nombre;
     piezasrestantes;
+    puntosRestantes;
     tablero;
+    timeOut;
     socket;
     constructor(name, socket){
         this.nombre = name;
         this.socket = socket;
+        this.puntosRestantes  = 1000;
+        this.timeOut = 0;
         this.piezasrestantes = [];
   
         let tabla = [];
@@ -100,10 +140,12 @@ class Juego{
     posX;
     posY;
     tipo;
+    visible;
     constructor(posX, posY, tipo){
         this.posX = posX;
         this.posY = posY;
         this.tipo = tipo;
+        this.visible = false;
     }
   }
   
@@ -141,6 +183,34 @@ class Juego{
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
   
   }
+  }
+
+
+  function powerUp(mensaje, socket){
+    switch (mensaje.jugada.powerUp) {
+      case 'avionesDeAtaque':
+          crearJuego(socket, mensaje);
+          break;
+      case 'minaMarina':
+          unirseJuego(socket, mensaje);
+          break;
+      case 'escudoDefensivo':
+          iniciarJuego(socket, mensaje);
+          break;
+      case 'misilCrucero':
+          realizarJugada(socket, mensaje);
+          break;
+      case 'regeneracionRapida':
+          dejarJuego(socket, mensaje);
+          break;
+      case 'ataqueEMP':
+          insertarPieza(socket, mensaje);
+          break;
+      case 'sonar':
+            actualizarJuego(mensaje.id);
+            break;
+      default:
+            mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
   }
 
   function devolverIndiceJugador(id, nombre){
@@ -248,4 +318,4 @@ class Juego{
   
   
   
-  console.log("Listening on http://localhost:8000");
+  console.log("Listening on http://localhost:8000");}
