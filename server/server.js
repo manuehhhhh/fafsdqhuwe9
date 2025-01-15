@@ -212,6 +212,7 @@ class Juego{
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
   }
+}
 
   function devolverIndiceJugador(id, nombre){
     let i = 0;
@@ -318,4 +319,4 @@ class Juego{
   
   
   
-  console.log("Listening on http://localhost:8000");}
+  console.log("Listening on http://localhost:8000");
