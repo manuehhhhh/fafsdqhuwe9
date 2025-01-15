@@ -133,11 +133,12 @@
             console.log(WEBSOCKET_URL);
 
             let nombreJugador = "PlaceHolder";
-            let juedoId = 1;
-            let crear = 1;
+            let juegoId = "1";
+            let crear = "1";
             let orientacion = "izq-dere";
-            let tamano = 0;
+            let tamano = 5;
             let tipo;
+            definirDatos();
             let casillas = document.getElementsByClassName("position");
 
             
@@ -148,6 +149,7 @@
                 X;
                 Y;
                 descripcion;
+                tablero;
                 constructor(afectado, posX, posY, descripcion, table){
                     this.jugadorAfectado = afectado;
                     this.X = posX;
@@ -175,10 +177,10 @@
             function definirDatos() {
                 let urlParams = new URLSearchParams(window.location.search);
                 nombreJugador = urlParams.get('jugador');
-                id = urlParams.get('id');
+                juegoId = urlParams.get('id');
                 crear = urlParams.get('create');
                 console.log(nombreJugador);
-                console.log(id);
+                console.log(juegoId);
             }
 
             
@@ -196,12 +198,12 @@
             }
 
             socket.addEventListener('message', (event) =>{
-                mensaje = JSON.parse(event.data);
-                console.log(mensaje);
-                if(mensaje.type == "error") {
-                    alert(mensaje.descripcion);
+                let mensajeRecibido = JSON.parse(event.data);
+                console.log(mensajeRecibido);
+                if(mensajeRecibido.type == "error") {
+                    alert(mensajeRecibido.descripcion);
                 } else {
-                    juego = mensaje.tablero;
+                    juego = mensajeRecibido.tablero;
                     console.log(juego);
                     imprimirTablero(nombreJugador);
                     casillas = document.getElementsByClassName("position");
@@ -211,10 +213,13 @@
             });
 
             socket.addEventListener('open', (event) =>{
+                console.log(crear);
                 if (crear == "1"){
-                    enviarMensaje("create", juedoId, nombreJugador);
+                    console.log("crear");
+                    enviarMensaje("create", juegoId, nombreJugador);
                 } else {
-                    enviarMensaje("join", juedoId, nombreJugador);
+                    console.log("unir");
+                    enviarMensaje("join", juegoId, nombreJugador);
                 }
             });
 
@@ -241,14 +246,19 @@
             function insertarBarco(orientacion, tamano, tipo, posX, posY){
                 console.log('akdjf');
                 let tablero = obtenerTablero();
-                let posAX = posX;
-                let posAY = posY;
+                let posAX = Number(posX);
+                let posAY = Number(posY);
                 let i = 0;
+                console.log(tamano);
+                console.log(posY);
+                console.log(posAY+tamano);
                 switch(orientacion){
                     case "izq-dere":
                         if(posAY+tamano <= 10){
                             while(tamano > 0){
+                                console.log("prueba1");
                                 tablero[posAY+i][posAX].tipo = "tipo-" + tamano.toString();
+                                console.log("fin");
                                 tamano--;
                                 i++;
                             }
@@ -259,6 +269,7 @@
                     case "dere-izq":
                         if(posAY+tamano >= 1){
                             while(tamano > 0){
+                                console.log("prueba1");
                                         tablero[posAY-i][posAX].tipo = "tipo-" + tamano.toString();
                                         tamano--;
                                         i++
@@ -272,6 +283,7 @@
                     case "arr-abj":
                         if(posAX+tamano <= 10){
                             while(tamano > 0){
+                                console.log("prueba1");
                                         tablero[posAY][posAX+i].tipo = "tipo-" + tamano.toString();
                                         tamano--;
                                         i++
@@ -284,6 +296,7 @@
                     case "abj-arr":
                     if(posAX+tamano >= 1){
                         while(tamano > 0){
+                                    console.log("prueba1");
                                     tablero[posAY][posAX-i].tipo = "tipo-" + tamano.toString();
                                     tamano--;
                                     i++;
@@ -299,11 +312,12 @@
 
          
             function obtenerTablero(){
-                for (const jugador in juego.jugadores){
+                for (const jugador of juego.jugadores){
                     if (jugador.nombre == nombreJugador){
                         return jugador.tablero;
                     }
                 }
+                console.log("no se encontraron");
             }
 
             console.log("1");
@@ -344,15 +358,17 @@
                 console.log(casillas.length);
                 for (let i = 0; i < casillas.length; i++) {
                     console.log("djlkf;a");
-                    casillas[i].addEventListener('click', () =>{
-                    insertarBarco(orientacion, tamano, tipo, this.posX, this.posY);
+                    casillas[i].addEventListener('click', (e) =>{
+                    insertarBarco(orientacion, tamano, tipo, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"));
                     console.log("huh");
-                    socket.send(new mensaje("establecerTablero", juedoId, nombreJugador, new Jugada(nombreJugador, this.posX, this.posY, "tablero", obtenerTablero()) ));
+                    let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero()));
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
                 })
                 }
             }
             
-
+            // ;
             
             
             

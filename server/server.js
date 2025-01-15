@@ -189,10 +189,10 @@ class Juego{
   function powerUp(mensaje, socket){
     switch (mensaje.jugada.powerUp) {
       case 'avionesDeAtaque':
-          crearJuego(socket, mensaje);
+          // crearJuego(socket, mensaje);
           break;
       case 'minaMarina':
-          unirseJuego(socket, mensaje);
+          // unirseJuego(socket, mensaje);
           break;
       case 'escudoDefensivo':
           iniciarJuego(socket, mensaje);
@@ -215,12 +215,19 @@ class Juego{
 }
 
   function devolverIndiceJugador(id, nombre){
-    let i = 0;
-    let longitud = juegos.get(id).jugadores.length();
-    while (i < longitud){
-      if (juegos.get(id).jugadores[i].nombre == nombre){
-        return i;
+    let j = 0;
+    let longitud = juegos.get(id).jugadores.length;
+    console.log(longitud);
+    while (j < longitud){
+      console.log(j);
+      console.log("hu");
+      console.log(juegos.get(id).jugadores[j].nombre);
+      console.log(nombre);
+      console.log("hu");
+      if (juegos.get(id).jugadores[j].nombre == nombre){
+        return j;
       }
+      j++;
     }
     return -1;
   }
@@ -230,10 +237,9 @@ class Juego{
       if (indice == -1){
         console.log("ejrkjf");
       } else{
-        juegos.get(mensaje.id).jugadores[i].tablero = mensaje.jugada.table;
+        juegos.get(mensaje.id).jugadores[indice].tablero = mensaje.jugada.table;
       }
-
-
+      actualizarJuego(mensaje.id);
   }
 
   function mandarMensaje(socket, mensaje){
