@@ -101,6 +101,20 @@
                         <h2>Cambiar a tablero J3</h2>
                         <h2>Cambiar a tablero J4</h2>
                     </div>
+
+                    <div id="control-piezas">
+                        <h2>Establecer Piezas</h2>
+                        <h3>Rotar</h3>
+                        <ul>
+                            <ul id="lista-de-piezas">
+                                <li id="poner-portaviones" class="boton-pieza">1 portaaviones (abarca 5 casillas)</li>
+                                <li id="poner-acorazado" class="boton-pieza">1 acorazado (4 casillas)</li>
+                                <li id="poner-crucero" class="boton-pieza">1 crucero (3 casillas)</li>
+                                <li id="poner-submarino" class="boton-pieza">1 submarino (3 casillas)</li>
+                                <li id="poner-destructor" class="boton-pieza">1 destructor (2 casillas)</li>
+                            </ul>
+                        </ul>
+                    </div>
             </aside>
             <br>
             
@@ -118,21 +132,45 @@
             const socket = new WebSocket(WEBSOCKET_URL);
             console.log(WEBSOCKET_URL);
 
-            nombreJugador = "PlaceHolder";
-            juedoId = 1;
-            crear = 1;
+            let nombreJugador = "PlaceHolder";
+            let juedoId = 1;
+            let crear = 1;
+            let orientacion = "izq-dere";
+            let tamano = 0;
+            let tipo;
+            let casillas = document.getElementsByClassName("position");
+
+            
             let juego;
+
+            class Jugada{
+                jugadorAfectado;
+                X;
+                Y;
+                descripcion;
+                constructor(afectado, posX, posY, descripcion, table){
+                    this.jugadorAfectado = afectado;
+                    this.X = posX;
+                    this.Y = posY;
+                    this.descripcion = descripcion;
+                    this.tablero = table;
+                }
+            }
             
             class mensaje{
                 type;
                 id;
                 jugador;
-                constructor(type, id, jugador){
+                jugada;
+                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada')){
                     this.type = type;
                     this.id = id;
                     this.jugador = jugador;
+                    this.jugada = jugada;
                 }
             }
+
+
 
             function definirDatos() {
                 let urlParams = new URLSearchParams(window.location.search);
@@ -166,14 +204,17 @@
                     juego = mensaje.tablero;
                     console.log(juego);
                     imprimirTablero(nombreJugador);
+                    casillas = document.getElementsByClassName("position");
+                    agregarEventoACasillas();
                 }
+
             });
 
             socket.addEventListener('open', (event) =>{
                 if (crear == "1"){
-                    enviarMensaje("create", id, nombreJugador);
+                    enviarMensaje("create", juedoId, nombreJugador);
                 } else {
-                    enviarMensaje("join", id, nombreJugador);
+                    enviarMensaje("join", juedoId, nombreJugador);
                 }
             });
 
@@ -187,7 +228,7 @@
                         console.log(casilla);
                         hijo = document.createElement("div");
                         hijo.setAttribute("posX", casilla.posX.toString());
-                        hijo.setAttribute("posY", casilla.posX.toString());
+                        hijo.setAttribute("posY", casilla.posY.toString());
                         hijo.classList.add("position");
                         hijo.classList.add(casilla.tipo);
                         document.getElementById('tablero').appendChild(hijo);
@@ -195,7 +236,125 @@
                 }
             }
 
-            definirDatos();
+           
+
+            function insertarBarco(orientacion, tamano, tipo, posX, posY){
+                console.log('akdjf');
+                let tablero = obtenerTablero();
+                let posAX = posX;
+                let posAY = posY;
+                let i = 0;
+                switch(orientacion){
+                    case "izq-dere":
+                        if(posAY+tamano <= 10){
+                            while(tamano > 0){
+                                tablero[posAY+i][posAX].tipo = "tipo-" + tamano.toString();
+                                tamano--;
+                                i++;
+                            }
+                        } else{
+                            console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                        }
+                        break;
+                    case "dere-izq":
+                        if(posAY+tamano >= 1){
+                            while(tamano > 0){
+                                        tablero[posAY-i][posAX].tipo = "tipo-" + tamano.toString();
+                                        tamano--;
+                                        i++
+
+                                    }
+                            } else{
+                                console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                            }
+
+                        break;
+                    case "arr-abj":
+                        if(posAX+tamano <= 10){
+                            while(tamano > 0){
+                                        tablero[posAY][posAX+i].tipo = "tipo-" + tamano.toString();
+                                        tamano--;
+                                        i++
+                                    }
+                            } else{
+                                console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                            }
+
+                        break;
+                    case "abj-arr":
+                    if(posAX+tamano >= 1){
+                        while(tamano > 0){
+                                    tablero[posAY][posAX-i].tipo = "tipo-" + tamano.toString();
+                                    tamano--;
+                                    i++;
+                                }
+                        } else{
+                            console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                        }
+                        break;
+                }
+            }
+            // orientacion puede ser izq-dere, dere-izq, arr-abj, abj-arr
+
+
+         
+            function obtenerTablero(){
+                for (const jugador in juego.jugadores){
+                    if (jugador.nombre == nombreJugador){
+                        return jugador.tablero;
+                    }
+                }
+            }
+
+            console.log("1");
+            let botonesPoner = document.getElementsByClassName("boton-pieza");
+            console.log(botonesPoner.length);
+            for (let i = 0; i < botonesPoner.length; i++) {
+                console.log("2");
+                botonesPoner[i].addEventListener('click', () => {
+                switch(this.id){
+                    case "poner-portaviones":
+                        tamano = 5;
+                        tipo = "portaviones"
+                        break;
+                    case "poner-acorazado":
+                        tamano = 4;
+                        tipo = "acorazado"
+                        break;
+                    case "poner-crucero":
+                        tamano = 3;
+                        tipo = "crucero"
+                        break;
+                    case "poner-submarino":
+                        tamano = 3;
+                        tipo = "submarino"
+                        break;
+                    case "poner-destructor":
+                        tamano = 2;
+                        tipo = "destructor";
+                        break;
+                }
+                }
+                )
+            }
+
+           
+            
+            function agregarEventoACasillas(){
+                console.log(casillas.length);
+                for (let i = 0; i < casillas.length; i++) {
+                    console.log("djlkf;a");
+                    casillas[i].addEventListener('click', () =>{
+                    insertarBarco(orientacion, tamano, tipo, this.posX, this.posY);
+                    console.log("huh");
+                    socket.send(new mensaje("establecerTablero", juedoId, nombreJugador, new Jugada(nombreJugador, this.posX, this.posY, "tablero", obtenerTablero()) ));
+                })
+                }
+            }
+            
+
+            
+            
             
         </script>
 

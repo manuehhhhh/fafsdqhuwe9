@@ -134,10 +134,35 @@ class Juego{
       case 'pedir':
             actualizarJuego(mensaje.id);
             break;
+      case 'establecerTablero':
+            establecerTablero(socket, mensaje);
+            break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
   
   }
+  }
+
+  function devolverIndiceJugador(id, nombre){
+    let i = 0;
+    let longitud = juegos.get(id).jugadores.length();
+    while (i < longitud){
+      if (juegos.get(id).jugadores[i].nombre == nombre){
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function establecerTablero(socket, mensaje){
+      let indice = devolverIndiceJugador(mensaje.id, mensaje.jugador);
+      if (indice == -1){
+        console.log("ejrkjf");
+      } else{
+        juegos.get(mensaje.id).jugadores[i].tablero = mensaje.jugada.table;
+      }
+
+
   }
 
   function mandarMensaje(socket, mensaje){
