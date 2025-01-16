@@ -1,0 +1,50 @@
+h2 {
+    padding: 1%;
+    font-size: 2.5rem;
+    color: aliceblue;
+    text-align: center; /* Centrar el encabezado */
+}
+
+p {
+    padding: 1%;
+    font-size: 1.8rem;
+    color: aliceblue;
+    line-height: 1.6; /* Mejorar la legibilidad */
+}
+
+#primer-parrafo {
+    float: left;
+    width: 70%;
+}
+
+#objetivo {
+    clear: both; /* Asegurar que el párrafo no flote junto a la imagen */
+}
+
+p a {
+    text-decoration: none;
+    color: aliceblue;
+}
+
+#imagen {
+    width: 27%;
+    display: block; /* Asegurar que la imagen se comporte como un bloque */
+    margin: 0 auto; /* Centrar la imagen */
+}
+
+main {
+    padding: 2%; /* Añadir espacio alrededor del contenido principal */
+    background-color: rgba(51, 51, 51, 0.8); /* Fondo semi-transparente para mejorar contraste */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+@media (max-width: 768px) {
+    #primer-parrafo {
+        width: 100%; /* Hacer que el párrafo ocupe el ancho completo en pantallas pequeñas */
+        float: none; /* Eliminar el float en pantallas pequeñas */
+    }
+
+    #imagen {
+        width: 80%; /* Ajustar el tamaño de la imagen en pantallas pequeñas */
+    }
+}

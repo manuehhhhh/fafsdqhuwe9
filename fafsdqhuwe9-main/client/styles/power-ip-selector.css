@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    color: beige;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2rem;
+    border-bottom: 2px solid #353434;
+    padding-bottom: 10px;
+    color: gold;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 1.5rem;
+    margin: 10px 0 5px 0;
+    color: gold;
+}
+
+input[type="text"], input[type="number"] {
+    width: 80%;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    border: 2px solid rgb(0, 26, 255);
+    border-radius: 5px;
+    background-color: beige;
+    color: gray;
+}
+
+input:placeholder-shown {
+    border-color: red;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.checkbox-label {
+    font-size: 1.5rem;
+    color: white;
+}
+
+
+
+#lista-powerup {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.powerup {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+}
+
+.powerup ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    text-align: left;
+}
+
+.powerup ul li {
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: beige;
+    border: 2px solid rgb(0, 26, 255);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+    background-color: lightblue;
+}

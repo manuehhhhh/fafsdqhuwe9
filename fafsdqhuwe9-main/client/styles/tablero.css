@@ -1,0 +1,197 @@
+:root{
+    --anchura-tablero: 50%;
+    --padding-tablero: 2%;
+
+    --border-casillas: 0.1rem;
+
+    --anchura-sidemenu:50%;
+    --altura-sidemenu: 100%;
+    --padding-sidemenu: 2%;
+}
+
+#tablero {
+    width: var(--anchura-tablero);
+    height: 100%;
+    padding: var(--padding-tablero);
+    margin: 0%;
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+}
+
+.tablero.J2{
+    display: none;
+}
+
+.position{
+    aspect-ratio: 1;
+    border-width: var(--border-casillas);
+    border-style: solid;
+    text-align: center;
+    background-image: url('../images/oceantile.png');
+    background-size: contain;
+}
+
+.position.barco-top{
+    background-image: url('../images/barco-front.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.position.barco-mid{
+    background-image: url('../images/barco-mid.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.position.barco-bottom{
+    background-image: url('../images/barco-bottom.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.rotar-arriba{
+    transform: rotate(90deg);
+}
+
+
+.rotar-derecha{
+    transform: rotateY(180deg);
+}
+
+
+.guia{
+    background-color: lightblue;
+    background-image: url('../images/sandtile1.png');
+    background-size: contain;
+}
+
+
+main{
+    display:flex;
+    justify-content: center;
+}
+
+
+.position:not(.agua):not(.guia){
+    background-color: lightblue;
+    background-image: url('../images/barco-bottom.png');
+    background-size: contain;
+}
+
+aside {
+    width: 46%;
+    padding: 2%;
+    height: 100%;
+    /* border: 2px, solid, blue; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+div#datos-del-turno{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+div#datos-del-turno h2{
+    display: block;
+    width: 95%;
+    padding: 1%;
+    border-radius: 5px;
+    margin: 0.5%;
+    background-color: rgb(0, 94, 255);
+}
+
+div#datos-del-turno{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+div#control-tablero h2{
+    display: block;
+    width: 100%;
+    padding: 1%;
+    border-radius: 5px;
+    margin: 0.5%;
+    background-color: rgb(0, 94, 255);
+}
+
+div#control-tablero h2:hover{
+    background-color: white;
+}
+
+ul#inventario-powerups{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    
+}
+
+ul#inventario-powerups li{
+    width: 95%;
+    text-align: center;
+    border: 1px;
+    border-radius: 5px;
+    margin-top: 0.3%;
+    margin-bottom: 0.3%;
+    text-decoration: none;
+    list-style-type: none;
+    font-size: 1.5rem;
+    background-color: aliceblue;
+}
+ul#inventario-powerups li:hover{
+    background-color: lightblue;
+}
+
+.descripcion-powerup{
+    display: none;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+ul.descripcion-powerup{
+    display: none;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+ul.descripcion-powerup li{
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    background-color: lightblue;
+}
+
+li:hover .descripcion-powerup{
+    width: 100%;
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    background-color: lightblue;
+}
+
+ul#inventario-powerups li ul.descripcion-powerup li{
+    font-size: 1rem;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    background-color: lightblue;
+}
+
+aside h2 {
+    margin: 1%;
+}
+
