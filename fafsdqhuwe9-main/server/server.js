@@ -19,10 +19,12 @@ class Mensaje{
 class Juego{
     jugadores;
     iniciado;
+    jugadorActual;
     constructor(nombreJugador, socket){
         this.jugadores = [];
         this.jugadores.push(new Jugador(nombreJugador, socket));
         this.iniciado = false;
+        this.jugadorActual = 0;
     }
   
     disparar(jugadorAtacado, posicionX, posicionY){
@@ -57,6 +59,14 @@ class Juego{
     }
     }
 
+    iniciarJuego(){
+      let estado = JSON.stringify(new Mensaje("inicio", "se inicia el juego", this));
+      for (const jugador of this.jugadores){
+            jugador.socket.send(estado);
+    }
+    }
+
+
     usarSonar(jugadorAtacado){
       let casillaAtacadaX = Math.random(11)+1;
       let casillaAtacadaY = Math.random(11)+1;
@@ -69,7 +79,7 @@ class Juego{
       let casillaAtacadaY = Math.random(11)+1;
       let indice = devolverIndiceJugador(jugadorAtacado);
       for (let i = 0; i < 5; i++){
-        this.disparar(jugadroAtacado, casillaAtacadaX, casillaAtacadaY);
+        this.disparar(jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
         casillaAtacadaX = Math.random(11)+1;
         casillaAtacadaY = Math.random(11)+1;
       }
@@ -128,8 +138,8 @@ class Juego{
     }
   
     perderCasilla(posicionX, posicionY){
-        tablero[posicionY][posicionX].visible = true;
-        tablero[posicionY][posicionX].golpeada = true;
+        this.tablero[posicionY][posicionX].visible = true;
+        this.tablero[posicionY][posicionX].golpeada = true;
       }
     
     insertarBarco(barco){
@@ -181,6 +191,9 @@ class Juego{
             break;
       case 'establecerTablero':
             establecerTablero(socket, mensaje);
+            break;
+      case "disparar":
+            dispararCasilla(socket, mensaje);
             break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
@@ -285,10 +298,17 @@ class Juego{
     }
   }
   
-  function iniciarJuego(mensaje){
-    if (juegos.has(mensaje.id)){
+  function iniciarJuego(socket, mensaje){
+    let todosLosJugadoresTienenTodasLasPiezas = true;
+    let longitud;
+    for (const jugador of juegos.get(mensaje.id).jugadores){
+      console.log(jugador.piezasrestantes.length);
+      todosLosJugadoresTienenTodasLasPiezas =  todosLosJugadoresTienenTodasLasPiezas && (jugador.piezasrestantes.length == 5);
+    }
+    if (juegos.has(mensaje.id) && todosLosJugadoresTienenTodasLasPiezas){
       juegos.get(mensaje.id).iniciado = true;
       actualizarJuego(mensaje.id);
+      juegos.get(mensaje.id).iniciarJuego();
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
@@ -302,6 +322,18 @@ class Juego{
   function actualizarJuego(id){
     juegos.get(id).devolverJuego();
   }
+
+  function dispararCasilla(socket, mensaje){
+    console.log("disparo piu piu");
+      if( (juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+        juegos.get(mensaje.id).disparar(mensaje.jugada.jugadorAfectado, mensaje.jugada.X, mensaje.jugada.Y);
+        actualizarJuego(mensaje.id);
+      } else {
+        mandarMensaje(socket, 'no existe juego con este id');
+      }
+  }
+
+
   
   function insertarPieza(socket, mensaje){
     juegos.get(mensaje.id).insertarcasilla(mensaje.jugadorAtacado, posicionX, posicionY, mensaje.tipo);
