@@ -138,7 +138,7 @@
             let orientacion = ["izq-dere", "arr-abj", "dere-izq", "abj-arr"];
             let indiceOrientacion= 0;
             let tamano = 5;
-            let tipo;
+            let tipo = "portaviones";
             definirDatos();
             let botonesPosicion = document.getElementsByClassName("boton-pieza");
             let casillas = document.getElementsByClassName("position");
@@ -165,11 +165,13 @@
                 id;
                 jugador;
                 jugada;
-                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada')){
+                pieza;
+                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada'), pieza= "nada"){
                     this.type = type;
                     this.id = id;
                     this.jugador = jugador;
                     this.jugada = jugada;
+                    this.pieza = pieza;
                 }
             }
 
@@ -180,13 +182,13 @@
                 nombreJugador = urlParams.get('jugador');
                 juegoId = urlParams.get('id');
                 crear = urlParams.get('create');
-                console.log(nombreJugador);
-                console.log(juegoId);
+                // console.log(nombreJugador);
+                // console.log(juegoId);
             }
 
             
             document.getElementById("boton-rotar").addEventListener("click", ()=> {
-                console.log()
+                // console.log()
                 if (indiceOrientacion == 3){
                     indiceOrientacion = 0;
                 } else {
@@ -198,7 +200,10 @@
             }
 
             function imprimirTablero(nombre){
-                document.getElementById("tablero").innerHTML ="";
+                let tableroHTML = document.getElementById("tablero");
+                while (tableroHTML.firstChild) {
+                    tableroHTML.removeChild(tableroHTML.lastChild);
+                }
                 for (const jugador of juego.jugadores){
                     if (jugador.nombre == nombre){
                         dibujarTablero(jugador.tablero);
@@ -208,12 +213,12 @@
 
             socket.addEventListener('message', (event) =>{
                 let mensajeRecibido = JSON.parse(event.data);
-                console.log(mensajeRecibido);
+                // console.log(mensajeRecibido);
                 if(mensajeRecibido.type == "error") {
                     alert(mensajeRecibido.descripcion);
                 } else {
                     juego = mensajeRecibido.tablero;
-                    console.log(juego);
+                    // console.log(juego);
                     imprimirTablero(nombreJugador);
                     casillas = document.getElementsByClassName("position");
                     agregarEventoACasillas();
@@ -222,24 +227,24 @@
             });
 
             socket.addEventListener('open', (event) =>{
-                console.log(crear);
+                // console.log(crear);
                 if (crear == "1"){
-                    console.log("crear");
+                    // console.log("crear");
                     enviarMensaje("create", juegoId, nombreJugador);
                 } else {
-                    console.log("unir");
+                    // console.log("unir");
                     enviarMensaje("join", juegoId, nombreJugador);
                 }
             });
 
             function dibujarTablero(tablero){
                 let hijo;
-                console.log(tablero);
+                // console.log(tablero);
                 for (const linea of tablero){
-                    console.log("linea procesando:");
-                    console.log(linea);
+                    // console.log("linea procesando:");
+                    // console.log(linea);
                     for (const casilla of linea){
-                        console.log(casilla);
+                        // console.log(casilla);
                         hijo = document.createElement("div");
                         hijo.setAttribute("posX", casilla.posX.toString());
                         hijo.setAttribute("posY", casilla.posY.toString());
@@ -253,14 +258,14 @@
            
 
             function insertarBarco(orientacion, tamano, tipo, posX, posY){
-                console.log('akdjf');
+                // console.log('akdjf');
                 let tablero = obtenerTablero();
                 let posAX = Number(posX);
                 let posAY = Number(posY);
                 let i = 0;
-                console.log(tamano);
-                console.log(posY);
-                console.log(posAY+tamano);
+                // console.log(tamano);
+                // console.log(posY);
+                // console.log(posAY+tamano);
                 switch(orientacion){
                     case "izq-dere":
                         if(posAX+tamano <= 10){
@@ -326,14 +331,14 @@
                         return jugador.tablero;
                     }
                 }
-                console.log("no se encontraron");
+                // console.log("no se encontraron");
             }
 
-            console.log("1");
+            // console.log("1");
             let botonesPoner = document.getElementsByClassName("boton-pieza");
-            console.log(botonesPoner.length);
+            // console.log(botonesPoner.length);
             for (let i = 0; i < botonesPoner.length; i++) {
-                console.log("2");
+                // console.log("2");
                 botonesPoner[i].addEventListener('click', () => {
                 switch( botonesPoner[i].id){
                     case "poner-portaviones":
@@ -364,13 +369,13 @@
            
             
             function agregarEventoACasillas(){
-                console.log(casillas.length);
+                // console.log(casillas.length);
                 for (let i = 0; i < casillas.length; i++) {
-                    console.log("djlkf;a");
+                    // console.log("djlkf;a");
                     casillas[i].addEventListener('click', (e) =>{
                     insertarBarco(orientacion[indiceOrientacion], tamano, tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"));
-                    console.log("huh");
-                    let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero()));
+                    console.log(tipo);
+                    let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                 })

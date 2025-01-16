@@ -128,11 +128,12 @@ class Juego{
     }
   
     perderCasilla(posicionX, posicionY){
-        tablero[posicionX][posicionY].tipo = 'disparado';
+        tablero[posicionY][posicionX].visible = true;
+        tablero[posicionY][posicionX].golpeada = true;
       }
     
-    insertarcasilla(posicionX, posicionY, tipo){
-      tablero[posicionX, posicionY].tipo = tipo;
+    insertarBarco(barco){
+      this.piezasrestantes.push(barco);
     }
   }
   
@@ -141,11 +142,13 @@ class Juego{
     posY;
     tipo;
     visible;
+    golpeada;
     constructor(posX, posY, tipo){
         this.posX = posX;
         this.posY = posY;
         this.tipo = tipo;
         this.visible = false;
+        this.golpeada = false;
     }
   }
   
@@ -234,11 +237,18 @@ class Juego{
 
   function establecerTablero(socket, mensaje){
       let indice = devolverIndiceJugador(mensaje.id, mensaje.jugador);
-      if (indice == -1){
-        console.log("ejrkjf");
+      if (juegos.get(mensaje.id).jugadores[indice].piezasrestantes.includes(mensaje.pieza)){
+        console.log("mensaje mandado");
+        mandarMensaje(socket, "esta pieza ya se puso");
       } else{
-        console.log(mensaje.jugada.tablero);
-        juegos.get(mensaje.id).jugadores[indice].tablero = mensaje.jugada.tablero;
+        if (indice == -1){
+          console.log("ejrkjf");
+        } else{
+          console.log(mensaje.jugada.tablero);
+          juegos.get(mensaje.id).jugadores[indice].tablero = mensaje.jugada.tablero;
+          juegos.get(mensaje.id).jugadores[indice].insertarBarco(mensaje.pieza);
+        }
+        
       }
       actualizarJuego(mensaje.id);
   }
