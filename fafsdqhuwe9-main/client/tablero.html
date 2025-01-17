@@ -42,51 +42,51 @@
                     <h2 id="indicador-tablero">Tablero del Jugador X</h2>
                     <h2>Puntos Restantes: XXXXX</h2>
                 </div>
-                <h2>Inventario de PowerUPs</h2>
+                <h2 id="titulo-powerups">Inventario de PowerUPs</h2>
                     <ul id="inventario-powerups">
-                        <li id="boton-sonar">Sonar 
+                        <li id="boton-sonar" powerUp="sonar" >Sonar 
                             <ul class="descripcion-powerup">
                             <li>Disponible mientras el submarino no haya sido hundido.</li>
                             <li>Revela una casilla al azar de un barco enemigo.</li>
                             <li>Costo: 5 puntos por uso.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar">Aviones de Ataque
+                        <li id="boton-sonar" powerUp="avionesDeAtaque">Aviones de Ataque
                             <ul class="descripcion-powerup">
                                 <li>Disponible mientras el portaaviones no haya sido hundido.</li>
                                 <li>Lanza hasta 5 misiles al azar en el tablero enemigo.</li>
                                 <li>Costo: 10 puntos por uso.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar">Mina Marina
+                        <li id="boton-sonar" powerUp="minaMarina">Mina Marina
                             <ul class="descripcion-powerup">
                                 <li>Los jugadores pueden plantar una mina en su propio tablero.</li>
                                 <li>Si el enemigo ataca una mina, recibe un "hit" adicional en una casilla adyacente al azar.</li>
                                 <li>Costo: 5 puntos para plantar</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar">Escudo Defensivo
+                        <li id="boton-sonar" powerUp="escudoDefensivo">Escudo Defensivo
                             <ul class="descripcion-powerup">
                                 <li>Protege una región de 3x3 casillas durante 3 turnos.</li>
                                 <li>Los ataques en el área protegida son anulados y el enemigo recibe un mensaje de "Bloqueado".</li>
                                 <li>Costo: 15 puntos.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar">Misil Crucero
+                        <li id="boton-sonar" powerUp="misilCrucero">Misil Crucero
                             <ul class="descripcion-powerup">
                                 <li>Ataque dirigido a un área de 3x3 casillas.</li>
                                 <li>Costo: 15 puntos.</li>
                                 <li>Tiempo de recarga: 5 turnos.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar">Reparación Rápida
+                        <li id="boton-sonar" powerUp="reparacionRapida">Reparación Rápida
                             <ul  class="descripcion-powerup">
                                 <li>Restaura hasta 2 casillas de un barco dañado (no hundido).</li>
                                 <li>Costo: 10 puntos.</li>
                                 <li>Un solo uso por barco.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar">Ataque EMP
+                        <li id="boton-sonar" powerUp="emp">Ataque EMP
                             <ul  class="descripcion-powerup">
                                 <li>Desactiva todas las funciones especiales del enemigo durante 3 turnos.</li>
                                 <li>Costo: 25 puntos.</li>
@@ -141,6 +141,7 @@
             let indiceOrientacion= 0;
             let tamano = 5;
             let tipo = "portaviones";
+            let powerUpActivo = "disparar";
             let partidaIniciada = false;
             definirDatos();
             let botonesPosicion = document.getElementsByClassName("boton-pieza");
@@ -194,6 +195,19 @@
             }
 
             
+
+            function configurarMenuPowerUps(){
+                document.getElementById("titulo-powerups").style.display = "block";
+                document.getElementById("inventario-powerups").style.display = "block";
+                let lis = document.getElementById("inventario-powerups").getElementsByTagName("li");
+                for (let i = 0; i < lis.length; i++){
+                    lis[i].addEventListener("click", ()=> {
+                        powerUpActivo = (powerUpActivo == "disparar")? lis[i].getAttribute("powerUp") : "disparar";
+                    })
+                }
+
+            }
+
             document.getElementById("boton-iniciar").addEventListener('click', ()=>{
                 socket.send(JSON.stringify(new mensaje("start", juegoId, nombreJugador)));
             })
@@ -205,7 +219,7 @@
                 let hijo;
                 for( const jugador of juego.jugadores){
                     hijo = document.createElement("h2");
-                    let nombreAux = jugador.nombre
+                    let nombreAux = jugador.nombre;
                     hijo.textContent = "Cambiar Al tablero de " + jugador.nombre;
                     document.getElementById("control-tablero").appendChild(hijo);
                     hijo.addEventListener("click", () =>{
@@ -263,10 +277,14 @@
                         imprimirTablero(nombreJugador);
                         casillas = document.getElementsByClassName("position");
                         agregarEventoACasillas();
+                        configurarMenuPowerUps();
                         console.log("asl");
                         configurarSideMenu();
                         console.log("huh");
                     break;
+                    case "eliminacion":
+                        alert(mensaje.juego);
+                        break;
                 }
             });
 
@@ -434,12 +452,7 @@
                     console.log("djlkf;a");
                     console.log(juego.iniciado);
                     if(juego.iniciado){
-                        casillas[i].addEventListener('click', (e) =>{
-                        console.log("inicio");
-                        let mandar = new mensaje("disparar", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
-                        console.log(mandar);
-                        socket.send(JSON.stringify(mandar));
-                })
+                        casillas[i].addEventListener('click', (e) =>{manejarEventosJuegoIniciado(i)})
                     } else {
                         casillas[i].addEventListener('click', (e) =>{
                         tipoAux = tipo;
@@ -457,6 +470,55 @@
                 }
             }
 
+            function manejarEventosJuegoIniciado(i){
+                let mandar;
+                console.log(powerUpActivo);
+               switch (powerUpActivo){
+                case "disparar":
+                    mandar = new mensaje("disparar", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "sonar":
+                    mandar = new mensaje("sonar", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "avionesDeAtaque":
+                    mandar = new mensaje("avionesDeAtaque", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "minaMarina":
+                    mandar = new mensaje("minaMarina", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "escudoDefensivo":
+                    mandar = new mensaje("escudoDefensivo", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "misilCrucero":
+                    mandar = new mensaje("misilCrucero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "reparacionRapida":
+                    mandar = new mensaje("reparacionRapida", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                case "emp":
+                    mandar = new mensaje("emp", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    console.log(mandar);
+                    socket.send(JSON.stringify(mandar));
+                    break;
+                
+               }
+                        
+            }
             
             
         </script>
