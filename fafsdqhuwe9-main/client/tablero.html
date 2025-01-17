@@ -299,7 +299,7 @@
 
            
 
-            function insertarBarco(orientacion, tamano, tipo, posX, posY){
+            function insertarBarco(orientacion, tamano, posX, posY){
                 // console.log('akdjf');
                 let tablero = obtenerTablero();
                 let posAX = Number(posX);
@@ -322,6 +322,7 @@
                             }
                         } else{
                             console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                            tipo = "salido";
                         }
                         break;
                     case "dere-izq":
@@ -337,6 +338,7 @@
                                     }
                             } else{
                                 console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                                tipo = "salido";
                             }
 
                         break;
@@ -352,6 +354,7 @@
                                     }
                             } else{
                                 console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                                tipo = "salido";
                             }
 
                         break;
@@ -367,6 +370,7 @@
                                 }
                         } else{
                             console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
+                            tipo = "salido";
                         }
                         break;
                 }
@@ -432,11 +436,15 @@
                 })
                     } else {
                         casillas[i].addEventListener('click', (e) =>{
-                        insertarBarco(orientacion[indiceOrientacion], tamano, tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"));
+                        tipoAux = tipo;
+                        insertarBarco(orientacion[indiceOrientacion], tamano, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"));
                         console.log(tipo);
-                        let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero(), casillas[i].getAttribute("orientacion"), casillas[i].getAttribute("grupo")), tipo);
-                        console.log(mandar);
-                        socket.send(JSON.stringify(mandar));
+                        if (tipo !== "salido"){
+                            let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero(), casillas[i].getAttribute("orientacion"), casillas[i].getAttribute("grupo")), tipo);
+                            console.log(mandar);
+                            socket.send(JSON.stringify(mandar));
+                        } 
+                        tipo = tipoAux;
                 })
                     }
                     
