@@ -29,7 +29,7 @@ class Juego{
   
     disparar(jugadorAtacado, posicionX, posicionY){
         for (const jugador of this.jugadores){
-            if (jugador.nombre = jugadorAtacado){  
+            if (jugador.nombre == jugadorAtacado){  
                 jugador.perderCasilla(posicionX, posicionY);
             }
         }
@@ -359,8 +359,12 @@ class Juego{
   
   function unirseJuego(socket, mensaje){
     if (juegos.has(mensaje.id)){
-      juegos.get(mensaje.id).insertarNuevoJugador(mensaje.jugador, socket);
-      actualizarJuego(mensaje.id);
+      if(juegos.get(mensaje.id).iniciado){
+        mandarMensaje(socket, 'no existe juego ya fue iniciado');
+      } else {
+        juegos.get(mensaje.id).insertarNuevoJugador(mensaje.jugador, socket);
+        actualizarJuego(mensaje.id);
+      }
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
@@ -408,7 +412,7 @@ class Juego{
         juegos.get(mensaje.id).disparar(mensaje.jugada.jugadorAfectado, mensaje.jugada.X, mensaje.jugada.Y);
         actualizarJuego(mensaje.id);
       } else {
-        mandarMensaje(socket, 'no existe juego con este id');
+        mandarMensaje(socket, 'no es tu turno >:(');
       }
   }
 
