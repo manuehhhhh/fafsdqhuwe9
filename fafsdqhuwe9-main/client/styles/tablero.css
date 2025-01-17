@@ -195,3 +195,45 @@ aside h2 {
     margin: 1%;
 }
 
+div#control-piezas h2{
+    text-align: center;
+}
+
+#boton-rotar {
+    width: 180px;
+    height: 30px;
+    text-align: center;
+    background-color: crimson;
+    color: aliceblue;
+    line-height: 180px;
+    margin: 2% auto 2% auto
+}
+
+div#control-piezas div {
+    text-align: center;
+
+}
+
+div#control-piezas div#div-cabezas{
+    margin: 2% ;
+} 
+
+.container{
+    height: 60px;
+    width: 30px;
+    border: 1px solid black;
+    display: inline-block;
+    position: relative;
+} 
+
+.dragHead{
+    height: 30px;
+    width: 15px;
+    border: 0.5px solid #eeee;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    background-color: crimson;
+}

@@ -104,8 +104,39 @@
 
                     <div id="control-piezas">
                         <h2>Establecer Piezas</h2>
-                        <h3 id="boton-rotar">Rotar</h3>
-                        <ul>
+                        <div id="boton-rotar">
+                            <h3 style="line-height: normal" >Da click para rotar</h3>
+                        </div>
+                        <div>
+                            <p id="texto-rotacion">
+                                Tu pieza irá: de izquierda a Derecha
+                            </p>
+                        </div>
+                        
+                        <div id="div-cabezas">
+
+                            <div class="container portaviones agua" id="container1">
+                                <div class="dragHead " id="portaviones" draggable="true" largo="5"></div>
+                            </div>
+
+                            <div class="container acorazado agua" id="container2">
+                                <div class="dragHead" id="acorazado" draggable="true" largo="4"></div>
+                            </div>
+
+                            <div class="container crucero agua" id="container3">
+                                <div class="dragHead" id="crucero" draggable="true" largo="3"></div>
+                            </div>
+
+                            <div class="container submarino agua" id="container4">
+                                <div class="dragHead" id="submarino" draggable="true" largo="3"></div>
+                            </div>
+
+                            <div class="container destructor agua" id="container5">
+                                <div class="dragHead" id="destructor" draggable="true" largo="2"></div>
+                            </div>
+
+                        </div>
+                        <!-- <ul>
                             <ul id="lista-de-piezas">
                                 <li id="poner-portaviones" class="boton-pieza">1 portaaviones (abarca 5 casillas)</li>
                                 <li id="poner-acorazado" class="boton-pieza">1 acorazado (4 casillas)</li>
@@ -113,7 +144,7 @@
                                 <li id="poner-submarino" class="boton-pieza">1 submarino (3 casillas)</li>
                                 <li id="poner-destructor" class="boton-pieza">1 destructor (2 casillas)</li>
                             </ul>
-                        </ul>
+                        </ul> -->
                     </div>
             </aside>
             <br>
@@ -194,6 +225,24 @@
                 } else {
                     indiceOrientacion++;
                 }
+                orientacion[indiceOrientacion];
+                console.log(orientacion[indiceOrientacion]);
+
+                switch(orientacion[indiceOrientacion]){
+                    case "izq-dere":
+                        document.getElementById('texto-rotacion').textContent = 'Tu pieza irá: de Izquierda a Derecha';
+                        break;
+                    case "dere-izq":
+                        document.getElementById('texto-rotacion').textContent = 'Tu pieza irá: de Derecha a Izquierda';
+                        break;
+                    case "arr-abj":
+                        document.getElementById('texto-rotacion').textContent = 'Tu pieza irá: de Arriba a Abajo';
+                        break;
+                    case "abj-arr":
+                        document.getElementById('texto-rotacion').textContent = 'Tu pieza irá: de Abajo a Arriba';
+                        break;
+                }
+
             })
             function enviarMensaje(tipo, id, jugador){
                 socket.send(JSON.stringify(new mensaje(tipo, id, jugador)));
@@ -213,7 +262,8 @@
 
             socket.addEventListener('message', (event) =>{
                 let mensajeRecibido = JSON.parse(event.data);
-                // console.log(mensajeRecibido);
+                console.log(`DDD: ${mensajeRecibido.descripcion}`);
+
                 if(mensajeRecibido.type == "error") {
                     alert(mensajeRecibido.descripcion);
                 } else {
@@ -223,7 +273,6 @@
                     casillas = document.getElementsByClassName("position");
                     agregarEventoACasillas();
                 }
-
             });
 
             socket.addEventListener('open', (event) =>{
@@ -257,15 +306,15 @@
 
            
 
-            function insertarBarco(orientacion, tamano, tipo, posX, posY){
+            function insertarBarco(orientacion, tamano, tipo, posX, posY, draggeado){
                 // console.log('akdjf');
                 let tablero = obtenerTablero();
                 let posAX = Number(posX);
                 let posAY = Number(posY);
                 let i = 0;
-                // console.log(tamano);
-                // console.log(posY);
-                // console.log(posAY+tamano);
+                console.log(`A: ${tamano}`);
+                console.log(`B: ${posY}`);
+                console.log(`C: ${posAY+tamano}` );
                 switch(orientacion){
                     case "izq-dere":
                         if(posAX+tamano <= 10){
@@ -276,6 +325,7 @@
                                 tamano--;
                                 i++;
                             }
+                            draggeado.remove();
                         } else{
                             console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                         }
@@ -289,6 +339,7 @@
                                         i++
 
                                     }
+                                    draggeado.remove();
                             } else{
                                 console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                             }
@@ -302,6 +353,7 @@
                                         tamano--;
                                         i++
                                     }
+                                    draggeado.remove();
                             } else{
                                 console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                             }
@@ -315,6 +367,7 @@
                                     tamano--;
                                     i++;
                                 }
+                                draggeado.remove();
                         } else{
                             console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                         }
@@ -340,30 +393,29 @@
             for (let i = 0; i < botonesPoner.length; i++) {
                 // console.log("2");
                 botonesPoner[i].addEventListener('click', () => {
-                switch( botonesPoner[i].id){
-                    case "poner-portaviones":
-                        tamano = 5;
-                        tipo = "portaviones"
-                        break;
-                    case "poner-acorazado":
-                        tamano = 4;
-                        tipo = "acorazado"
-                        break;
-                    case "poner-crucero":
-                        tamano = 3;
-                        tipo = "crucero"
-                        break;
-                    case "poner-submarino":
-                        tamano = 3;
-                        tipo = "submarino"
-                        break;
-                    case "poner-destructor":
-                        tamano = 2;
-                        tipo = "destructor";
-                        break;
-                }
-                }
-                )
+                    switch( botonesPoner[i].id){
+                        case "poner-portaviones":
+                            tamano = 5;
+                            tipo = "portaviones"
+                            break;
+                        case "poner-acorazado":
+                            tamano = 4;
+                            tipo = "acorazado"
+                            break;
+                        case "poner-crucero":
+                            tamano = 3;
+                            tipo = "crucero"
+                            break;
+                        case "poner-submarino":
+                            tamano = 3;
+                            tipo = "submarino"
+                            break;
+                        case "poner-destructor":
+                            tamano = 2;
+                            tipo = "destructor";
+                            break;
+                    }
+                })
             }
 
            
@@ -372,33 +424,62 @@
                 // console.log(casillas.length);
                 for (let i = 0; i < casillas.length; i++) {
                     // console.log("djlkf;a");
-                    casillas[i].addEventListener('click', (e) =>{
-                    insertarBarco(orientacion[indiceOrientacion], tamano, tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"));
-                    console.log(tipo);
-                    let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero()), tipo);
-                    console.log(mandar);
-                    socket.send(JSON.stringify(mandar));
+                    casillas[i].addEventListener('dragover', function(event) {
+                        event.preventDefault();
+                    });
+
+                    
+                    casillas[i].addEventListener('drop', (e) =>{
+                        console.log(orientacion[indiceOrientacion])
+                        console.log(tamano)
+                        console.log(tipo)
+                        console.log(casillas[i].getAttribute("posY"))
+                        console.log(casillas[i].getAttribute("posX"));
+                        
+                        const id = event.dataTransfer.getData('text');
+                        
+                        const elementoDragged = document.getElementById(id);
+
+                        // console.log(`asjjsakdjsakl: ${document.getElementById(id)}`)
+
+                        insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged);
+
+                        console.log(tipo);
+
+                        let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero()), tipo);
+
+                        console.log(mandar);
+                        socket.send(JSON.stringify(mandar));
                 })
                 }
             }
 
-            // function agregarEventoABotonesPiezas(){
-            //     console.log(botonesPosicion.length);
-            //     for (let i = 0; i < botonesPosicion.length; i++) {
-            //         console.log("djlkf;a");
-            //         botonesPosicion[i].addEventListener('click', (e) =>{
-            //         let tipo = "";
-            //         let tamano = 0;
-            //         switch (botonesPosicion[i].id){
-            //             case: ""
-            //         }
-            //     })
-            //     }
-            // }
+
             
-            // ;
-            
-            
+            const heads = document.querySelectorAll('.dragHead');
+
+            heads.forEach(head => {
+                head.addEventListener('dragstart', function(event) {
+                    // headId = event.target.id;    
+                    tipo = event.target.id;
+                    tamano = this.getAttribute('largo');
+
+                    console.log(tipo);           
+                    console.log(tamano);
+
+                    event.dataTransfer.setData('text/plain', event.target.id);
+                    setTimeout(() => {
+                        event.target.style.display = 'none';
+                    }, 0);
+
+                });
+
+                head.addEventListener('dragend', function(event) {
+                    event.target.style.display = 'block';
+                });        
+            })
+
+            console.log(casillas);
             
         </script>
 
