@@ -506,7 +506,7 @@
                             
                             const elementoDragged = document.getElementById(id);
 
-                            // console.log(`asjjsakdjsakl: ${document.getElementById(id)}`)
+                            console.log(`asjjsakdjsakl: ${document.getElementById(id)}`)
 
                             insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged);
 
@@ -519,9 +519,27 @@
                             }
                             tipo = tipoAux;
                         })
+                    }
                 }
             }
-        }
+
+            const heads = document.querySelectorAll('.dragHead');
+            heads.forEach(head => {
+                head.addEventListener('dragstart', function(event) {
+                    // headId = event.target.id;    
+                    tipo = event.target.id;
+                    tamano = this.getAttribute('largo');
+                    console.log(tipo);           
+                    console.log(tamano);
+                    event.dataTransfer.setData('text/plain', event.target.id);
+                    setTimeout(() => {
+                        event.target.style.display = 'none';
+                    }, 0);
+                });
+                head.addEventListener('dragend', function(event) {
+                    event.target.style.display = 'block';
+                });        
+            })
 
             // function agregarEventoABotonesPiezas(){
             //     console.log(botonesPosicion.length);
