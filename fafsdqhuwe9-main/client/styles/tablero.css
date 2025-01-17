@@ -77,6 +77,10 @@ main{
     background-image: url('../images/barco-bottom.png');
     background-size: contain;
 }
+.position[golpeada="true"]{
+    background-image: url('../images/sandtile1.png');
+    background-size: contain;
+}
 
 aside {
     width: 46%;

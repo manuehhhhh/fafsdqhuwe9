@@ -19,10 +19,12 @@ class Mensaje{
 class Juego{
     jugadores;
     iniciado;
+    jugadorActual;
     constructor(nombreJugador, socket){
         this.jugadores = [];
         this.jugadores.push(new Jugador(nombreJugador, socket));
         this.iniciado = false;
+        this.jugadorActual = 0;
     }
   
     disparar(jugadorAtacado, posicionX, posicionY){
@@ -30,6 +32,11 @@ class Juego{
             if (jugador.nombre = jugadorAtacado){  
                 jugador.perderCasilla(posicionX, posicionY);
             }
+        }
+        if(this.jugadorActual+1 < this.jugadores.length){
+          this.jugadorActual++;
+        } else {
+          this.jugadorActual = 0;
         }
     }
   
@@ -57,6 +64,15 @@ class Juego{
     }
     }
 
+    iniciarJuego(){
+      let estado = JSON.stringify(new Mensaje("inicio", "se inicia el juego", this));
+      for (const jugador of this.jugadores){
+            jugador.establecerVidas();
+            jugador.socket.send(estado);
+    }
+    }
+
+
     usarSonar(jugadorAtacado){
       let casillaAtacadaX = Math.random(11)+1;
       let casillaAtacadaY = Math.random(11)+1;
@@ -69,7 +85,7 @@ class Juego{
       let casillaAtacadaY = Math.random(11)+1;
       let indice = devolverIndiceJugador(jugadorAtacado);
       for (let i = 0; i < 5; i++){
-        this.disparar(jugadroAtacado, casillaAtacadaX, casillaAtacadaY);
+        this.disparar(jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
         casillaAtacadaX = Math.random(11)+1;
         casillaAtacadaY = Math.random(11)+1;
       }
@@ -98,6 +114,7 @@ class Juego{
     nombre;
     piezasrestantes;
     puntosRestantes;
+    vidasPorPiezas;
     tablero;
     timeOut;
     socket;
@@ -107,6 +124,7 @@ class Juego{
         this.puntosRestantes  = 1000;
         this.timeOut = 0;
         this.piezasrestantes = [];
+        this.vidasPorPiezas = [];
   
         let tabla = [];
         let Aux = [];
@@ -126,14 +144,79 @@ class Juego{
         }
         this.tablero = tabla;
     }
+
+    quitarVidaABarco(nombreBarco){
+      let i = 0;
+      console.log("pongo");
+      console.log(this.piezasrestantes);
+      console.log(nombreBarco);
+      while ( i < this.piezasrestantes.length){
+        console.log(i);
+        if (this.piezasrestantes[i] == nombreBarco){
+          this.vidasPorPiezas[i]--;
+          console.log("Vidas de: "+ nombreBarco + this.vidasPorPiezas[i].toString());
+          if (this.vidasPorPiezas[i] <= 0){
+            console.log("muere " + this.vidasPorPiezas + "  " + this.piezasrestantes[i]);
+            this.piezasrestantes.splice(i,1);
+            this.vidasPorPiezas.splice(i,1);
+          }
+        }
+        i++;
+      }
+    } 
+
+
   
     perderCasilla(posicionX, posicionY){
-        tablero[posicionY][posicionX].visible = true;
-        tablero[posicionY][posicionX].golpeada = true;
+      console.log("rapido");
+      if (!(this.tablero[posicionX][posicionY].golpeada)){
+        console.log(this.tablero[posicionX][posicionY].tipo);
+        this.tablero[posicionX][posicionY].visible = true;
+        this.tablero[posicionX][posicionY].golpeada = true;
+        switch (this.tablero[posicionX][posicionY].grupo){
+          case "portaviones":
+            this.quitarVidaABarco("portaviones");
+            break;
+          case "acorazado":
+            this.quitarVidaABarco("acorazado");
+            break;
+          case "crucero":
+            this.quitarVidaABarco("crucero");
+            break;
+          case "submarino":
+            this.quitarVidaABarco("submarino");
+            break;
+          case "destructor":
+            this.quitarVidaABarco("destructor");
+            break;
+        }
+      }  
       }
     
     insertarBarco(barco){
       this.piezasrestantes.push(barco);
+    }
+
+    establecerVidas(){
+      for (const pieza of this.piezasrestantes){
+        switch(pieza){
+          case "portaviones":
+            this.vidasPorPiezas.push(5);
+            break;
+          case "acorazado":
+            this.vidasPorPiezas.push(4);
+            break;
+          case "crucero":
+            this.vidasPorPiezas.push(3);
+            break;
+          case "submarino":
+            this.vidasPorPiezas.push(3);
+            break;
+          case "destructor":
+            this.vidasPorPiezas.push(2);
+            break;
+        }
+      }
     }
   }
   
@@ -143,12 +226,16 @@ class Juego{
     tipo;
     visible;
     golpeada;
+    grupo;
+    orientacion;
     constructor(posX, posY, tipo){
         this.posX = posX;
         this.posY = posY;
         this.tipo = tipo;
         this.visible = false;
         this.golpeada = false;
+        this.orientacion = "izq-dere";
+        this.grupo = "mar";
     }
   }
   
@@ -181,6 +268,9 @@ class Juego{
             break;
       case 'establecerTablero':
             establecerTablero(socket, mensaje);
+            break;
+      case "disparar":
+            dispararCasilla(socket, mensaje);
             break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
@@ -285,10 +375,18 @@ class Juego{
     }
   }
   
-  function iniciarJuego(mensaje){
-    if (juegos.has(mensaje.id)){
+  function iniciarJuego(socket, mensaje){
+    let todosLosJugadoresTienenTodasLasPiezas = true;
+    let longitud;
+    for (const jugador of juegos.get(mensaje.id).jugadores){
+      console.log(jugador.piezasrestantes.length);
+      todosLosJugadoresTienenTodasLasPiezas =  todosLosJugadoresTienenTodasLasPiezas && (jugador.piezasrestantes.length == 5);
+    }
+    if (juegos.has(mensaje.id) && todosLosJugadoresTienenTodasLasPiezas){
       juegos.get(mensaje.id).iniciado = true;
       actualizarJuego(mensaje.id);
+      juegos.get(mensaje.id).iniciarJuego();
+      juegos.get
     } else {
       mandarMensaje(socket, 'no existe juego con este id');
     }
@@ -302,6 +400,19 @@ class Juego{
   function actualizarJuego(id){
     juegos.get(id).devolverJuego();
   }
+
+  function dispararCasilla(socket, mensaje){
+    console.log("disparo piu piu");
+    console.log(juegos.get(mensaje.id).jugadorActual);
+      if( (juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+        juegos.get(mensaje.id).disparar(mensaje.jugada.jugadorAfectado, mensaje.jugada.X, mensaje.jugada.Y);
+        actualizarJuego(mensaje.id);
+      } else {
+        mandarMensaje(socket, 'no existe juego con este id');
+      }
+  }
+
+
   
   function insertarPieza(socket, mensaje){
     juegos.get(mensaje.id).insertarcasilla(mensaje.jugadorAtacado, posicionX, posicionY, mensaje.tipo);
