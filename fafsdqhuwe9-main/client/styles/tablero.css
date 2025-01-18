@@ -72,15 +72,106 @@ main{
 }
 
 
-.position:not(.agua):not(.guia)[visible="true"]{
+/* .position:not(.agua):not(.guia)[visible="true"]{
     background-color: lightblue;
     background-image: url('../images/barco-bottom.png');
     background-size: contain;
-}
+} */
 .position[golpeada="true"]{
-    /* background-image: url('../images/sandtile1.png'); */
     filter:  hue-rotate(180deg);
     background-size: contain;
+}
+
+.position[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-size: cover;
+}
+
+
+
+.position.portaviones5[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-image: url(../images/Portaviones/Portaviones1.png);
+}
+.position.portaviones4[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-image: url(../images/Portaviones/Portaviones2.png);
+}
+.position.portaviones3[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-image: url(../images/Portaviones/Portaviones3.png);
+}
+.position.portaviones2[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-image: url(../images/Portaviones/Portaviones4.png);
+}
+.position.portaviones1[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-image: url(../images/Portaviones/Portaviones5.png);
+}
+
+.position[grupo='acorazado'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-size: cover;
+}
+.position.acorazado4[grupo='acorazado'][visible='true'][golpeada='false']{
+    background-image: url(../images/Acorazado/Acorazado1.png);
+}
+.position.acorazado3[grupo='acorazado'][visible='true'][golpeada='false']{
+    background-image: url(../images/Acorazado/Acorazado2.png);
+}
+.position.acorazado2[grupo='acorazado'][visible='true'][golpeada='false']{
+    background-image: url(../images/Acorazado/Acorazado3.png);
+}
+.position.acorazado1[grupo='acorazado'][visible='true'][golpeada='false']{
+    background-image: url(../images/Acorazado/Acorazado4.png);
+}
+
+.position[grupo='crucero'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-size: cover;
+}
+.position.crucero3[grupo='crucero'][visible='true'][golpeada='false']{
+    background-image: url(../images/Crucero/Crucero1.png);
+}
+.position.crucero2[grupo='crucero'][visible='true'][golpeada='false']{
+    background-image: url(../images/Crucero/Crucero2.png);
+}
+.position.crucero1[grupo='crucero'][visible='true'][golpeada='false']{
+    background-image: url(../images/Crucero/Crucero3.png);
+}
+
+.position[grupo='submarino'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-size: cover;
+}
+.position.submarino3[grupo='submarino'][visible='true'][golpeada='false']{
+    background-image: url(../images/Submarino/Submarino1.png);
+}
+.position.submarino2[grupo='submarino'][visible='true'][golpeada='false']{
+    background-image: url(../images/Submarino/Submarino2.png);
+}
+.position.submarino1[grupo='submarino'][visible='true'][golpeada='false']{
+    background-image: url(../images/Submarino/Submarino3.png);
+}
+
+.position[grupo='destructor'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-size: cover;
+}
+.position.destructor2[grupo='destructor'][visible='true'][golpeada='false']{
+    background-image: url(../images/Destructor/Destructor1.png);
+}
+.position.destructor1[grupo='destructor'][visible='true'][golpeada='false']{
+    background-image: url(../images/Destructor/Destructor2.png);
+}
+
+div:not([grupo='mar'])[orientacion='izq-dere']{
+    transform: none;
+}
+div:not([grupo='mar'])[orientacion='arr-abj']{
+    transform: rotateZ(90deg);
+}
+div:not([grupo='mar'])[orientacion='dere-izq']{
+    transform: rotateZ(180deg);
+}
+div:not([grupo='mar'])[orientacion='abj-arr']{
+    transform: rotateZ(270deg);
 }
 
 aside {
@@ -200,3 +291,45 @@ aside h2 {
     margin: 1%;
 }
 
+div#control-piezas h2{
+    text-align: center;
+}
+
+#boton-rotar {
+    width: 180px;
+    height: 30px;
+    text-align: center;
+    background-color: crimson;
+    color: aliceblue;
+    line-height: 180px;
+    margin: 2% auto 2% auto
+}
+
+div#control-piezas div {
+    text-align: center;
+
+}
+
+div#control-piezas div#div-cabezas{
+    margin: 2% ;
+} 
+
+.container{
+    height: 60px;
+    width: 30px;
+    border: 1px solid black;
+    display: inline-block;
+    position: relative;
+} 
+
+.dragHead{
+    height: 30px;
+    width: 15px;
+    border: 0.5px solid #eeee;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    background-color: crimson;
+}
