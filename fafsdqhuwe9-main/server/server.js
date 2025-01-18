@@ -30,8 +30,13 @@ class Juego{
     }
   
     disparar(id, jugadorAtacado, posicionX, posicionY){
+      console.log("dfjajf");
         for (const jugador of this.jugadores){
+            console.log("po");
+            console.log(jugador.nombre);
+            console.log(jugadorAtacado);
             if (jugador.nombre == jugadorAtacado){  
+                console.log("encontramo");
                 jugador.perderCasilla(posicionX, posicionY);
                 console.log("eeeeeeeeeeeeeeee");
                 console.log(jugador.piezasrestantes);
@@ -139,11 +144,18 @@ class Juego{
     }
 
     usarMisilCrucero(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY) {
+      console.log(typeof casillaAtacadaX);
+      console.log ("piu piu pero mas");
       this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
+      console.log ("piu piu pero mas");
       this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY);
+      console.log ("piu piu pero mas");
       this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY);
+      console.log ("piu piu pero mas");
       this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY+1);
+      console.log ("piu piu pero mas");
       this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY-1);
+      console.log ("piu piu pero mas");
       this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY+1);
       this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY-1);
       this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY-1);
@@ -226,6 +238,8 @@ class Juego{
   
     perderCasilla(posicionX, posicionY){
       console.log("rapido");
+      console.log(posicionX);
+      console.log(posicionY);
       if (!(this.tablero[posicionX][posicionY].golpeada) && (this.tablero[posicionX][posicionY].escudos <= 0)){
         console.log(this.tablero[posicionX][posicionY].tipo);
         this.tablero[posicionX][posicionY].visible = true;
@@ -557,7 +571,7 @@ class Juego{
   function realizarEscudoDefensivo(socket, mensaje){
     console.log("definedo");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarEscudoDefensivo(mensaje.id, mensaje.jugada.jugadorAfectado,  mensaje.jugada.X, mensaje.jugada.Y);
+      juegos.get(mensaje.id).usarEscudoDefensivo(mensaje.id, mensaje.jugada.jugadorAfectado,Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
@@ -567,7 +581,8 @@ class Juego{
   function realizarMisilCrucero(socket, mensaje){
     console.log("vacaciones :)");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarMisilCrucero(mensaje.jugada.jugadorAfectado,  mensaje.jugada.X, mensaje.jugada.Y);
+      juegos.get(mensaje.id).usarMisilCrucero(mensaje.id, mensaje.jugada.jugadorAfectado,  Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
+      console.log("juego mandado");
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
