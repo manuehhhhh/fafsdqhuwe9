@@ -135,15 +135,7 @@
                             </div>
 
                         </div>
-                        <!-- <ul>
-                            <ul id="lista-de-piezas">
-                                <li id="poner-portaviones" class="boton-pieza">1 portaaviones (abarca 5 casillas)</li>
-                                <li id="poner-acorazado" class="boton-pieza">1 acorazado (4 casillas)</li>
-                                <li id="poner-crucero" class="boton-pieza">1 crucero (3 casillas)</li>
-                                <li id="poner-submarino" class="boton-pieza">1 submarino (3 casillas)</li>
-                                <li id="poner-destructor" class="boton-pieza">1 destructor (2 casillas)</li>
-                            </ul>
-                        </ul> -->
+                        
                     </div>
 
                     <h2 id="boton-iniciar">Iniciar Juego</h2>
@@ -375,6 +367,10 @@
                 }
             }
 
+            function comprobarEspacios(){
+
+            }
+
            
 
             function insertarBarco(orientacion, tamano, tipo, posX, posY, draggeado){
@@ -383,12 +379,24 @@
                 let posAX = Number(posX);
                 let posAY = Number(posY);
                 let i = 0;
+                let j = 0;
+                let ocupado = false;
+
+                let tamanoAux = tamano
                 console.log(`A: ${tamano}`);
                 console.log(`B: ${posY}`);
                 console.log(`C: ${posAY+tamano}` );
                 switch(orientacion){
                     case "izq-dere":
-                        if(posAX+tamano <= 10){
+                        while(tamanoAux > 0 && posAX+tamano <= 10 && ocupado == false){
+                            let grupo = tablero[posAY][posAX+j].grupo;
+                            if(grupo !== 'mar'){
+                                ocupado = true;
+                            }
+                            tamanoAux--;
+                            j++;
+                        }
+                        if(posAX+tamano <= 10 && ocupado == false){
                             while(tamano > 0){
                                 console.log("prueba1");
                                 tablero[posAY][posAX+i].tipo = tipo + tamano.toString();
@@ -405,12 +413,20 @@
                             tipo = "salido";
                         }
                         break;
+
                     case "dere-izq":
-                        if(posAX-tamano >= 1){
+                        while(tamanoAux > 0 && posAX-tamano >= 1 && ocupado == false){
+                            let grupo = tablero[posAY][posAX-j].grupo;
+                            if(grupo !== 'mar'){
+                                ocupado = true;
+                            }
+                            tamanoAux--;
+                            j++;
+                        }
+                        if(posAX-tamano >= 1 && ocupado == false){
                             while(tamano > 0){
                                 console.log("prueba1");
                                         tablero[posAY][posAX-i].tipo = tipo + tamano.toString();
-                                        
                                         tablero[posAY][posAX-i].grupo = tipo;
                                         tablero[posAY][posAX-i].orientacion = orientacion;
                                         tamano--;
@@ -422,14 +438,23 @@
                                 console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                                 tipo = "salido";
                             }
-
                         break;
+
                     case "arr-abj":
-                        if(posAY+tamano <= 10){
+                        while(tamanoAux > 0 && posAY+tamano <= 10 && ocupado == false){
+                            let grupo = tablero[posAY+j][posAX].grupo;
+                            if(grupo !== 'mar'){
+                                ocupado = true;
+                            }
+                            tamanoAux--;
+                            j++;
+                        }
+
+                        if(posAY+tamano <= 10 && ocupado == false){
+
                             while(tamano > 0){
                                 console.log("prueba1");
                                         tablero[posAY+i][posAX].tipo = tipo + tamano.toString();
-                                        
                                         tablero[posAY+i][posAX].grupo = tipo;
                                         tablero[posAY+i][posAX].orientacion = orientacion;
                                         tamano--;
@@ -439,11 +464,20 @@
                             } else{
                                 console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                                 tipo = "salido";
+                                
                             }
 
                         break;
                     case "abj-arr":
-                    if(posAY-tamano >= 1){
+                        while(tamanoAux > 0 && posAY-tamano >= 1 && ocupado == false){
+                            let grupo = tablero[posAY-j][posAX].grupo;
+                            if(grupo !== 'mar'){
+                                ocupado = true;
+                            }
+                            tamanoAux--;
+                            j++;
+                        }
+                    if(posAY-tamano >= 1 && ocupado == false){
                         while(tamano > 0){
                                     console.log("prueba1");
                                     tablero[posAY-i][posAX].tipo = tipo + tamano.toString();
@@ -453,12 +487,13 @@
                                     i++;
                                 }
                                 draggeado.remove();
-                        } else{
+                    } else{
                             console.log("ERRROOOOOOORRRRR SE SALE DEL ARRRAAAAYYY");
                             tipo = "salido";
                         }
                         break;
                 }
+                return tipo;
             }
             // orientacion puede ser izq-dere, dere-izq, arr-abj, abj-arr
 
@@ -534,16 +569,12 @@
 
                             console.log(`asjjsakdjsakl: ${document.getElementById(id)}`)
 
-                            insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged);
-
-                            console.log(`asdsaasdsd ${tipo}`);
-                            if (tipo !== "salido"){
+                            if (insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged) !== 'salido'){
                                 let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero(), casillas[i].getAttribute("orientacion"), casillas[i].getAttribute("grupo")), tipo);
         
-                                console.log(mandar);
+                                console.log(`MIRAME: ${mandar}`);
                                 socket.send(JSON.stringify(mandar));
                             }
-                            tipo = tipoAux;
                         })
                     }
                 }
@@ -619,12 +650,8 @@
                     powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
-                
-               }
-                        
+               }           
             }
-            
-            
         </script>
 
 </body>
