@@ -160,9 +160,9 @@ class Juego{
       this.jugadores[indice].restaurarVida(jugadorUsado);
     }
 
-    usarEscudoDefensivo(jugadorUsado, posX, posY){
-      let indice = devolverIndiceJugador(jugadorAtacado);
-      this.jugadores[indice].establecerEscudo(jugadorUsado);
+    usarEscudoDefensivo(id, jugadorUsado, posX, posY){
+      let indice = devolverIndiceJugador(id, jugadorUsado);
+      this.jugadores[indice].establecerEscudo(posX, posY);
 
     }
   }
@@ -226,7 +226,7 @@ class Juego{
   
     perderCasilla(posicionX, posicionY){
       console.log("rapido");
-      if (!(this.tablero[posicionX][posicionY].golpeada)){
+      if (!(this.tablero[posicionX][posicionY].golpeada) && (this.tablero[posicionX][posicionY].escudos <= 0)){
         console.log(this.tablero[posicionX][posicionY].tipo);
         this.tablero[posicionX][posicionY].visible = true;
         this.tablero[posicionX][posicionY].golpeada = true;
@@ -247,7 +247,9 @@ class Juego{
             this.quitarVidaABarco("destructor");
             break;
         }
-      }  
+      } else {
+        this.tablero[posicionX][posicionY].escudos--;
+      }
       }
     
     insertarBarco(barco){
@@ -294,8 +296,10 @@ class Juego{
     }
 
     establecerEscudo(posX, posY){
+      console.log("casilla leida");
+      console.log(posX.toString() + "-" + posY.toString());
       this.tablero[posX][posY].escudos+= 3;
-      this.tablero[posX+1][posY].escudos+= 3;
+      // this.tablero[posX+1][posY].escudos+= 3;
       this.tablero[posX][posY+1].escudos+= 3;
       this.tablero[posX+1][posY+1].escudos+= 3;
       this.tablero[posX-1][posY].escudos+= 3;
@@ -553,7 +557,7 @@ class Juego{
   function realizarEscudoDefensivo(socket, mensaje){
     console.log("definedo");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarEscudoDefensivo(mensaje.jugada.jugadorAfectado,  mensaje.jugada.X, mensaje.jugada.Y);
+      juegos.get(mensaje.id).usarEscudoDefensivo(mensaje.id, mensaje.jugada.jugadorAfectado,  mensaje.jugada.X, mensaje.jugada.Y);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');

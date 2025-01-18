@@ -486,37 +486,43 @@
                 case "sonar":
                     mandar = new mensaje("sonar", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
-
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "avionesDeAtaque":
                     mandar = new mensaje("avionesDeAtaque", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "minaMarina":
                     mandar = new mensaje("minaMarina", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "escudoDefensivo":
                     mandar = new mensaje("escudoDefensivo", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "misilCrucero":
                     mandar = new mensaje("misilCrucero", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "reparacionRapida":
                     mandar = new mensaje("reparacionRapida", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "emp":
                     mandar = new mensaje("emp", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
+                    powerUpActivo = "disparar";
                     socket.send(JSON.stringify(mandar));
                     break;
                 
