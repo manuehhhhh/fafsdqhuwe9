@@ -72,15 +72,63 @@ main{
 }
 
 
-.position:not(.agua):not(.guia)[visible="true"]{
+/* .position:not(.agua):not(.guia)[visible="true"]{
     background-color: lightblue;
     background-image: url('../images/barco-bottom.png');
     background-size: contain;
-}
+} */
 .position[golpeada="true"]{
     /* background-image: url('../images/sandtile1.png'); */
     filter:  hue-rotate(180deg);
     background-size: contain;
+}
+
+.position[grupo='portaviones'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-image: url('../images/portaviones.png');
+    background-size: cover;
+}
+
+.position[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
+    transform: rotateZ(-90deg);
+}
+
+.position.portaviones5[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
+    background-position: 0 1px;
+}
+.position.portaviones4[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
+    background-position: 0 -63px;
+}
+.position.portaviones3[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
+    background-position: 0 -126px;
+}
+.position.portaviones2[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
+    background-position: 0 -189px;
+}
+
+.position[grupo='acorazado'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-image: url('../images/acorazado.png');
+    background-size: cover;
+}
+
+.position[grupo='crucero'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-image: url('../images/crucero.png');
+    background-size: cover;
+}
+
+.position[grupo='submarino'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-image: url('../images/submarino.png');
+    background-size: cover;
+    
+}
+
+.position[grupo='destructor'][visible='true'][golpeada='false']{
+    background-color: #2e579d;
+    background-image: url('../images/destructor.png');
+    background-size: cover;
 }
 
 aside {

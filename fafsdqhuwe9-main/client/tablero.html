@@ -368,6 +368,7 @@
                         hijo.setAttribute("grupo", casilla.grupo);
                         hijo.setAttribute("orientacion", casilla.orientacion)
                         hijo.classList.add("position");
+                        // console.log(`QUE PASA TIOOO: ${casilla.tipo}`)
                         hijo.classList.add(casilla.tipo);
                         document.getElementById('tablero').appendChild(hijo);
                     }
@@ -391,6 +392,7 @@
                             while(tamano > 0){
                                 console.log("prueba1");
                                 tablero[posAY][posAX+i].tipo = tipo + tamano.toString();
+                                console.log(`CREO QUE LO ENCONTRE: ${tamano}`)
                                 tablero[posAY][posAX+i].grupo = tipo;
                                 tablero[posAY][posAX+i].orientacion = orientacion;
                                 console.log("fin");
@@ -408,6 +410,7 @@
                             while(tamano > 0){
                                 console.log("prueba1");
                                         tablero[posAY][posAX-i].tipo = tipo + tamano.toString();
+                                        
                                         tablero[posAY][posAX-i].grupo = tipo;
                                         tablero[posAY][posAX-i].orientacion = orientacion;
                                         tamano--;
@@ -426,6 +429,7 @@
                             while(tamano > 0){
                                 console.log("prueba1");
                                         tablero[posAY+i][posAX].tipo = tipo + tamano.toString();
+                                        
                                         tablero[posAY+i][posAX].grupo = tipo;
                                         tablero[posAY+i][posAX].orientacion = orientacion;
                                         tamano--;
@@ -505,8 +509,8 @@
             function agregarEventoACasillas(){
                 // console.log(casillas.length);
                 for (let i = 0; i < casillas.length; i++) {
-                    console.log("djlkf;a");
-                    console.log(juego.iniciado);
+                    // console.log("djlkf;a");
+                    // console.log(juego.iniciado);
                     if(juego.iniciado){
                         casillas[i].addEventListener('click', (e) =>{manejarEventosJuegoIniciado(i)})
                     } else {
@@ -532,7 +536,7 @@
 
                             insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged);
 
-                            console.log(tipo);
+                            console.log(`asdsaasdsd ${tipo}`);
                             if (tipo !== "salido"){
                                 let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero(), casillas[i].getAttribute("orientacion"), casillas[i].getAttribute("grupo")), tipo);
         
