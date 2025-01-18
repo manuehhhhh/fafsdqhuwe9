@@ -99,8 +99,8 @@ class Juego{
     usarSonar(id, jugadorAtacado){
       let golpeamos = true;
       let indice;
-      let casillaAtacadaX = Math.floor(Math.random()*10) +1;
-      let casillaAtacadaY =  Math.floor(Math.random()*10) +1;
+      let casillaAtacadaX = Math.floor(Math.random()*10);
+      let casillaAtacadaY =  Math.floor(Math.random()*10);
       while (golpeamos){
         console.log("Jugador atacado: "+ jugadorAtacado);
         indice = devolverIndiceJugador(id, jugadorAtacado);
@@ -110,11 +110,11 @@ class Juego{
           golpeamos = false;
           console.log(casillaAtacadaY.toString + "-" + casillaAtacadaX.toString());
         }
-        if (casillaAtacadaX <= 10){
+        if (casillaAtacadaX <= 9){
           casillaAtacadaX++;
         } else {
           casillaAtacadaX = 1;
-          if (casillaAtacadaY <= 10){
+          if (casillaAtacadaY <= 9){
             casillaAtacadaY++;
           } else {
             casillaAtacadaY = 1;
@@ -125,16 +125,16 @@ class Juego{
     }
 
     usarAtaqueAviones(id, jugadorAtacado){
-      let casillaAtacadaXA = Math.floor(Math.random()*10) +1;
-      let casillaAtacadaYA =  Math.floor(Math.random()*10) +1;
+      let casillaAtacadaXA = Math.floor(Math.random()*10);
+      let casillaAtacadaYA =  Math.floor(Math.random()*10);
       console.log(jugadorAtacado);
       // console.log(this.jugadores);
       let indice = devolverIndiceJugador(id, jugadorAtacado);
       console.log("a");
       for (let i = 0; i < 5; i++){
         this.disparar(id, jugadorAtacado, casillaAtacadaXA, casillaAtacadaYA);
-        casillaAtacadaXA = Math.floor(Math.random()*10) +1;
-        casillaAtacadaYA = Math.floor(Math.random()*10) +1;
+        casillaAtacadaXA = Math.floor(Math.random()*10);
+        casillaAtacadaYA = Math.floor(Math.random()*10);
       }
     }
 

@@ -143,6 +143,7 @@
             let tipo = "portaviones";
             let powerUpActivo = "disparar";
             let partidaIniciada = false;
+            let mostrandoMenu;
             definirDatos();
             let botonesPosicion = document.getElementsByClassName("boton-pieza");
             let casillas = document.getElementsByClassName("position");
@@ -190,6 +191,7 @@
                 nombreJugador = urlParams.get('jugador');
                 juegoId = urlParams.get('id');
                 crear = urlParams.get('create');
+                mostrandoMenu = nombreJugador;
                 // console.log(nombreJugador);
                 // console.log(juegoId);
             }
@@ -223,9 +225,10 @@
                     hijo.textContent = "Cambiar Al tablero de " + jugador.nombre;
                     document.getElementById("control-tablero").appendChild(hijo);
                     hijo.addEventListener("click", () =>{
-                        document.getElementById("indicador-tablero").textContent =" Tablero del Jugador: "+ jugador.nombre
-                        imprimirTablero(nombreAux);
-                        agregarEventoACasillas();
+                        mostrandoMenu = jugador.nombre;
+                        document.getElementById("indicador-tablero").textContent =" Tablero del Jugador: "+ mostrandoMenu;
+                        imprimirTablero(mostrandoMenu);
+                        agregarEventoACasillas(mostrandoMenu);
                     })
                 }
             }
@@ -251,7 +254,7 @@
                 for (const jugador of juego.jugadores){
                     if (jugador.nombre == nombre){
                         console.log("Nombre: " + nombre);
-                        dibujarTablero(jugador.tablero);
+                        dibujarTablero(jugador.tablero, (nombre == nombreJugador));
                     }
                 }
             }
@@ -267,14 +270,15 @@
                     case "tablero":
                         juego = mensajeRecibido.tablero;
                         document.getElementById("indicador-Turno").textContent = "Turno del Jugador: " + juego.jugadores[juego.jugadorActual].nombre;
-                        imprimirTablero(nombreJugador);
+                        imprimirTablero(mostrandoMenu);
                         casillas = document.getElementsByClassName("position");
                         agregarEventoACasillas();
                         break;
                     case "inicio":
+                        mostrandoMenu = nombreJugador;
                         juego = mensajeRecibido.tablero;
                         document.getElementById("indicador-Turno").textContent = "Turno del Jugador: " + juego.jugadores[juego.jugadorActual].nombre;
-                        imprimirTablero(nombreJugador);
+                        imprimirTablero(mostrandoMenu);
                         casillas = document.getElementsByClassName("position");
                         agregarEventoACasillas();
                         configurarMenuPowerUps();
@@ -299,7 +303,7 @@
                 }
             });
 
-            function dibujarTablero(tablero){
+            function dibujarTablero(tablero, propio){
                 let hijo;
                 // console.log(tablero);
                 for (const linea of tablero){
@@ -310,7 +314,7 @@
                         hijo = document.createElement("div");
                         hijo.setAttribute("posX", casilla.posX.toString());
                         hijo.setAttribute("posY", casilla.posY.toString());
-                        hijo.setAttribute("visible", casilla.visible.toString());
+                        hijo.setAttribute("visible", (propio)? "true":casilla.visible.toString());
                         hijo.setAttribute("golpeada", casilla.golpeada.toString());
                         hijo.setAttribute("grupo", casilla.grupo);
                         hijo.setAttribute("orientacion", casilla.orientacion)
@@ -475,43 +479,43 @@
                 console.log(powerUpActivo);
                switch (powerUpActivo){
                 case "disparar":
-                    mandar = new mensaje("disparar", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("disparar", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "sonar":
-                    mandar = new mensaje("sonar", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("sonar", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
 
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "avionesDeAtaque":
-                    mandar = new mensaje("avionesDeAtaque", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("avionesDeAtaque", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "minaMarina":
-                    mandar = new mensaje("minaMarina", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("minaMarina", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "escudoDefensivo":
-                    mandar = new mensaje("escudoDefensivo", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("escudoDefensivo", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "misilCrucero":
-                    mandar = new mensaje("misilCrucero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("misilCrucero", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "reparacionRapida":
-                    mandar = new mensaje("reparacionRapida", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("reparacionRapida", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "emp":
-                    mandar = new mensaje("emp", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
+                    mandar = new mensaje("emp", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
                     console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
