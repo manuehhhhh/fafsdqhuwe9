@@ -47,11 +47,20 @@ class Juego{
                 }
             }
         }
+
+
         if(this.jugadorActual+1 < this.jugadores.length){
           this.jugadorActual++;
         } else {
           this.jugadorActual = 0;
         }
+        if (this.jugadores[this.jugadorActual].timeOut > 1){
+          this.jugadores[this.jugadorActual].timeOut--;
+          this.jugadorActual = (this.jugadorActual+1 < this.jugadores.length)? this.jugadorActual+=1: 0;
+          console.log(this.jugadores[this.jugadorActual].timeOut);
+          console.log("jijijaja");
+        }
+
 
         
     }
@@ -162,9 +171,10 @@ class Juego{
       this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY+1);
     }
 
-    usarAtaqueEMP(jugadorAtacado){
-      let indice = devolverIndiceJugador(jugadorAtacado);
+    usarAtaqueEMP(id, jugadorAtacado){
+      let indice = devolverIndiceJugador(id, jugadorAtacado);
       this.jugadores[indice].timeOut+=3;
+      console.log(this.jugadores[indice].timeOut);
     }
 
     usarRegeneracionRapida(jugadorUsado, posX, posY){
@@ -602,7 +612,7 @@ class Juego{
   function realizarEMP(socket, mensaje){
     console.log("emp");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.jugada.jugadorAfectado);
+      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.id, mensaje.jugada.jugadorAfectado);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
