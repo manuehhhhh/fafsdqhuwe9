@@ -72,13 +72,14 @@ main{
 }
 
 
-.position:not(.agua):not(.guia){
+.position:not(.agua):not(.guia)[visible="true"]{
     background-color: lightblue;
     background-image: url('../images/barco-bottom.png');
     background-size: contain;
 }
 .position[golpeada="true"]{
-    background-image: url('../images/sandtile1.png');
+    /* background-image: url('../images/sandtile1.png'); */
+    filter:  hue-rotate(180deg);
     background-size: contain;
 }
 

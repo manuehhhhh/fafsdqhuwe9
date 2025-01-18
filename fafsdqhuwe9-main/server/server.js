@@ -20,17 +20,31 @@ class Juego{
     jugadores;
     iniciado;
     jugadorActual;
+    cantidadJugadores;
     constructor(nombreJugador, socket){
         this.jugadores = [];
         this.jugadores.push(new Jugador(nombreJugador, socket));
         this.iniciado = false;
         this.jugadorActual = 0;
+        this.cantidadJugadores = 0;
     }
   
-    disparar(jugadorAtacado, posicionX, posicionY){
+    disparar(id, jugadorAtacado, posicionX, posicionY){
+      console.log("dfjajf");
         for (const jugador of this.jugadores){
+            console.log("po");
+            console.log(jugador.nombre);
+            console.log(jugadorAtacado);
             if (jugador.nombre == jugadorAtacado){  
+                console.log("encontramo");
                 jugador.perderCasilla(posicionX, posicionY);
+                console.log("eeeeeeeeeeeeeeee");
+                console.log(jugador.piezasrestantes);
+                if (jugador.piezasrestantes.length == 0){
+                  console.log("djhaquiiiiiiiiifajk");
+                  this.eliminarJugador(id, jugadorAtacado);
+                  this.jugadorActual--;
+                }
             }
         }
         if(this.jugadorActual+1 < this.jugadores.length){
@@ -38,6 +52,8 @@ class Juego{
         } else {
           this.jugadorActual = 0;
         }
+
+        
     }
   
     ponerCasilla(jugadorAtacado, posicionX, posicionY, tipo){
@@ -51,14 +67,26 @@ class Juego{
   
     insertarNuevoJugador(nombre, socket){
       this.jugadores.push(new Jugador(nombre, socket));
+      this.cantidadJugadores++;
     }
   
-    eliminarJugador(nombreEliminado){
-      this.jugadores = this.jugadores.filter(nombre !== nombreEliminado);
+    eliminarJugador(id, nombreEliminado){
+      let indice = devolverIndiceJugador(id, nombreEliminado);
+      this.jugadores = this.jugadores.slice(indice, 1);
+      console.log("kdjhfakjsdhiudsahnfjuidsh");
+      this.devolverEliminacion(nombreEliminado);
   }
 
     devolverJuego(){
       let estado = JSON.stringify(new Mensaje("tablero", "estado del juego", this));
+      for (const jugador of this.jugadores){
+            jugador.socket.send(estado);
+    }
+    }
+
+    devolverEliminacion(eliminado){
+      console.log("dkljaklj");
+      let estado = JSON.stringify(new Mensaje("eliminacion", "estado del juego", "el jugador " + eliminado + " ha sido eliminado"));
       for (const jugador of this.jugadores){
             jugador.socket.send(estado);
     }
@@ -73,40 +101,81 @@ class Juego{
     }
 
 
-    usarSonar(jugadorAtacado){
-      let casillaAtacadaX = Math.random(11)+1;
-      let casillaAtacadaY = Math.random(11)+1;
-      let indice = devolverIndiceJugador(jugadorAtacado);
-      this.jugadores[indice].tablero[posAtacadaY][posAtacadaX].visible = true;
-    }
+    usarSonar(id, jugadorAtacado){
+      let golpeamos = true;
+      let indice;
+      let casillaAtacadaX = Math.floor(Math.random()*10);
+      let casillaAtacadaY =  Math.floor(Math.random()*10);
+      while (golpeamos){
+        console.log("Jugador atacado: "+ jugadorAtacado);
+        indice = devolverIndiceJugador(id, jugadorAtacado);
+        console.log(casillaAtacadaY.toString() + "-" + casillaAtacadaX.toString());
+        if(this.jugadores[indice].tablero[casillaAtacadaY][casillaAtacadaX].grupo !== "mar"){
+          this.jugadores[indice].tablero[casillaAtacadaY][casillaAtacadaX].visible = true;
+          golpeamos = false;
+          console.log(casillaAtacadaY.toString + "-" + casillaAtacadaX.toString());
+        }
+        if (casillaAtacadaX <= 9){
+          casillaAtacadaX++;
+        } else {
+          casillaAtacadaX = 1;
+          if (casillaAtacadaY <= 9){
+            casillaAtacadaY++;
+          } else {
+            casillaAtacadaY = 1;
+          }
+        }
 
-    usarAtaqueAviones(jugadorAtacado){
-      let casillaAtacadaX = Math.random(11)+1;
-      let casillaAtacadaY = Math.random(11)+1;
-      let indice = devolverIndiceJugador(jugadorAtacado);
-      for (let i = 0; i < 5; i++){
-        this.disparar(jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
-        casillaAtacadaX = Math.random(11)+1;
-        casillaAtacadaY = Math.random(11)+1;
       }
     }
 
-    usarMisilCrucero(jugadorAtacado, casillaAtacadaX, casillaAtacadaY) {
-      let indice = devolverIndiceJugador(jugadorAtacado);
-      this.disparar(jugadroAracado, casillaAtacadaX, casillaAtacadaY);
-      this.disparar(jugadroAracado, casillaAtacadaX+1, casillaAtacadaY);
-      this.disparar(jugadroAracado, casillaAtacadaX-1, casillaAtacadaY);
-      this.disparar(jugadroAracado, casillaAtacadaX, casillaAtacadaY+1);
-      this.disparar(jugadroAracado, casillaAtacadaX, casillaAtacadaY-1);
-      this.disparar(jugadroAracado, casillaAtacadaX+1, casillaAtacadaY+1);
-      this.disparar(jugadroAracado, casillaAtacadaX-1, casillaAtacadaY-1);
-      this.disparar(jugadroAracado, casillaAtacadaX+1, casillaAtacadaY-1);
-      this.disparar(jugadroAracado, casillaAtacadaX-1, casillaAtacadaY+1);
+    usarAtaqueAviones(id, jugadorAtacado){
+      let casillaAtacadaXA = Math.floor(Math.random()*10);
+      let casillaAtacadaYA =  Math.floor(Math.random()*10);
+      console.log(jugadorAtacado);
+      // console.log(this.jugadores);
+      let indice = devolverIndiceJugador(id, jugadorAtacado);
+      console.log("a");
+      for (let i = 0; i < 5; i++){
+        this.disparar(id, jugadorAtacado, casillaAtacadaXA, casillaAtacadaYA);
+        casillaAtacadaXA = Math.floor(Math.random()*10);
+        casillaAtacadaYA = Math.floor(Math.random()*10);
+      }
+    }
+
+    usarMisilCrucero(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY) {
+      console.log(typeof casillaAtacadaX);
+      console.log ("piu piu pero mas");
+      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
+      console.log ("piu piu pero mas");
+      this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY);
+      console.log ("piu piu pero mas");
+      this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY);
+      console.log ("piu piu pero mas");
+      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY+1);
+      console.log ("piu piu pero mas");
+      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY-1);
+      console.log ("piu piu pero mas");
+      this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY+1);
+      this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY-1);
+      this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY-1);
+      this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY+1);
     }
 
     usarAtaqueEMP(jugadorAtacado){
       let indice = devolverIndiceJugador(jugadorAtacado);
       this.jugadores[indice].timeOut+=3;
+    }
+
+    usarRegeneracionRapida(jugadorUsado, posX, posY){
+      let indice = devolverIndiceJugador(jugadorAtacado);
+      this.jugadores[indice].restaurarVida(jugadorUsado);
+    }
+
+    usarEscudoDefensivo(id, jugadorUsado, posX, posY){
+      let indice = devolverIndiceJugador(id, jugadorUsado);
+      this.jugadores[indice].establecerEscudo(posX, posY);
+
     }
   }
   
@@ -169,7 +238,9 @@ class Juego{
   
     perderCasilla(posicionX, posicionY){
       console.log("rapido");
-      if (!(this.tablero[posicionX][posicionY].golpeada)){
+      console.log(posicionX);
+      console.log(posicionY);
+      if (!(this.tablero[posicionX][posicionY].golpeada) && (this.tablero[posicionX][posicionY].escudos <= 0)){
         console.log(this.tablero[posicionX][posicionY].tipo);
         this.tablero[posicionX][posicionY].visible = true;
         this.tablero[posicionX][posicionY].golpeada = true;
@@ -190,7 +261,9 @@ class Juego{
             this.quitarVidaABarco("destructor");
             break;
         }
-      }  
+      } else {
+        this.tablero[posicionX][posicionY].escudos--;
+      }
       }
     
     insertarBarco(barco){
@@ -218,7 +291,40 @@ class Juego{
         }
       }
     }
-  }
+
+    restaurarVida(posX, posY){
+      let orientacion = this.tablero[posX][posY].orientacion;
+      if ( (orientacion == "iqz-dere") || (orientacion == "dere-izq") ){
+        this.tablerotablero[posX][posY].golpeada = false;
+        if (posx + 1 <= 11){
+          let i = (this.tablerotablero[posX+1][posY].grupo == "mar")? -1: 1;
+          this.tablerotablero[posX+i][posY].golepada == false;
+        }
+      } else if ( (orientacion == "arr-abj") || (orientacion == "abj-arr") ){
+        this.tablerotablero[posX][posY].golpeada = false;
+        if (posy + 1 <= 11){
+          let i = (this.tablerotablero[posX][posY+1].grupo == "mar")? -1: 1;
+          this.tablerotablero[posX][posY+i].golepada == false;
+        }
+      }
+    }
+
+    establecerEscudo(posX, posY){
+      console.log("casilla leida");
+      console.log(posX.toString() + "-" + posY.toString());
+      this.tablero[posX][posY].escudos+= 3;
+      // this.tablero[posX+1][posY].escudos+= 3;
+      this.tablero[posX][posY+1].escudos+= 3;
+      this.tablero[posX+1][posY+1].escudos+= 3;
+      this.tablero[posX-1][posY].escudos+= 3;
+      this.tablero[posX][posY-1].escudos+= 3;
+      this.tablero[posX-1][posY-1].escudos+= 3;
+      this.tablero[posX+1][posY-1].escudos+= 3;
+      this.tablero[posX-1][posY+1].escudos+= 3;
+    }
+    }
+  
+
   
   class Casilla {
     posX;
@@ -228,12 +334,14 @@ class Juego{
     golpeada;
     grupo;
     orientacion;
+    escudos;
     constructor(posX, posY, tipo){
         this.posX = posX;
         this.posY = posY;
         this.tipo = tipo;
         this.visible = false;
         this.golpeada = false;
+        this.escudos = 0;
         this.orientacion = "izq-dere";
         this.grupo = "mar";
     }
@@ -271,6 +379,27 @@ class Juego{
             break;
       case "disparar":
             dispararCasilla(socket, mensaje);
+            break;
+      case "sonar":
+            realizarSonar(socket, mensaje);
+            break;
+      case "avionesDeAtaque":
+            realizarAvionesDeAtaque(socket, mensaje);
+            break;
+      case "minaMarina":
+            console.log("tipo, honestamente? este no lo quiero hacer");
+            break;
+      case "escudoDefensivo":
+            realizarEscudoDefensivo(socket, mensaje);
+            break;
+      case "misilCrucero":
+            realizarMisilCrucero(socket, mensaje);
+            break;
+      case "reparacionRapida":
+            realizarRegeneracionRapida(socket, mensaje);
+            break;
+      case "emp":
+            realizarEMP(socket, mensaje);
             break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
@@ -397,7 +526,7 @@ class Juego{
   }
   
   function realizarJugada(socket, mensaje){
-    juegos.get(mensaje.id).disparar(mensaje.jugada.jugador, mensaje.jugada.X, mensaje.jugada.Y);
+    juegos.get(mensaje.id).disparar(mensaje.id, mensaje.jugada.jugador, mensaje.jugada.X, mensaje.jugada.Y);
     devolverJuego(socket, indice);
   }
   
@@ -409,12 +538,77 @@ class Juego{
     console.log("disparo piu piu");
     console.log(juegos.get(mensaje.id).jugadorActual);
       if( (juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-        juegos.get(mensaje.id).disparar(mensaje.jugada.jugadorAfectado, mensaje.jugada.X, mensaje.jugada.Y);
+        juegos.get(mensaje.id).disparar(mensaje.id, mensaje.jugada.jugadorAfectado, mensaje.jugada.X, mensaje.jugada.Y);
         actualizarJuego(mensaje.id);
       } else {
         mandarMensaje(socket, 'no es tu turno >:(');
       }
   }
+
+  function realizarSonar(socket, mensaje){
+    console.log("sonar bzzzzz te encuentro");
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      console.log("djhfak");
+      console.log(mensaje.jugada.jugadorAfectado);
+      juegos.get(mensaje.id).usarSonar(mensaje.id, mensaje.jugada.jugadorAfectado);
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+}
+  function realizarAvionesDeAtaque(socket, mensaje){
+    console.log("avion piu");
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      console.log("1987");
+      juegos.get(mensaje.id).usarAtaqueAviones(mensaje.id, mensaje.jugada.jugadorAfectado);
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+  }
+
+
+  function realizarEscudoDefensivo(socket, mensaje){
+    console.log("definedo");
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      juegos.get(mensaje.id).usarEscudoDefensivo(mensaje.id, mensaje.jugada.jugadorAfectado,Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+  }
+
+  function realizarMisilCrucero(socket, mensaje){
+    console.log("vacaciones :)");
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      juegos.get(mensaje.id).usarMisilCrucero(mensaje.id, mensaje.jugada.jugadorAfectado,  Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
+      console.log("juego mandado");
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+  }
+
+  function realizarRegeneracionRapida(socket, mensaje){
+    console.log("culito de rana");
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      juegos.get(mensaje.id).usarRegeneracionRapida(mensaje.jugada.jugadorAfectado,  mensaje.jugada.X, mensaje.jugada.Y);
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+  }
+
+  function realizarEMP(socket, mensaje){
+    console.log("emp");
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.jugada.jugadorAfectado);
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+  }
+    
 
 
   
