@@ -90,20 +90,28 @@ main{
 }
 
 .position[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
-    transform: rotateZ(-90deg);
+    transform: none;
 }
 
 .position.portaviones5[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
-    background-position: 0 1px;
+    /* background-position: 0 1px; */
+    background-image: url(../images/Portaviones/Portaviones1.png);
 }
 .position.portaviones4[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
-    background-position: 0 -63px;
+    /* background-position: 0 -63px; */
+    background-image: url(../images/Portaviones/Portaviones2.png);
 }
 .position.portaviones3[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
-    background-position: 0 -126px;
+    /* background-position: 0 -126px; */
+    background-image: url(../images/Portaviones/Portaviones3.png);
 }
 .position.portaviones2[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
-    background-position: 0 -189px;
+    /* background-position: 0 -189px; */
+    background-image: url(../images/Portaviones/Portaviones4.png);
+}
+.position.portaviones1[grupo='portaviones'][visible='true'][golpeada='false'][orientacion='izq-dere']{
+    /* background-position: 0 -189px; */
+    background-image: url(../images/Portaviones/Portaviones5.png);
 }
 
 .position[grupo='acorazado'][visible='true'][golpeada='false']{
