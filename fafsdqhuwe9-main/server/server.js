@@ -123,20 +123,21 @@ class Juego{
     }
     }
 
-
-    usarSonar(id, jugadorAtacado){
+    //Puntos restados
+    usarSonar(id, jugadorAtacado, jugadorAgresor){
       let golpeamos = true;
       let indice;
       let casillaAtacadaX = Math.floor(Math.random()*10);
       let casillaAtacadaY =  Math.floor(Math.random()*10);
       while (golpeamos){
-        console.log("Jugador atacado: "+ jugadorAtacado);
+        // console.log("Jugador atacado: "+ jugadorAtacado);
         indice = devolverIndiceJugador(id, jugadorAtacado);
-        console.log(casillaAtacadaY.toString() + "-" + casillaAtacadaX.toString());
+        // console.log(casillaAtacadaY.toString() + "-" + casillaAtacadaX.toString());
         if(this.jugadores[indice].tablero[casillaAtacadaY][casillaAtacadaX].grupo !== "mar"){
           this.jugadores[indice].tablero[casillaAtacadaY][casillaAtacadaX].visible = true;
           golpeamos = false;
-          console.log(casillaAtacadaY.toString + "-" + casillaAtacadaX.toString());
+          indice = devolverIndiceJugador(id, jugadorAgresor);
+          this.jugadores[indice].puntosRestantes -= 5;
         }
         if (casillaAtacadaX <= 9){
           casillaAtacadaX++;
@@ -152,44 +153,60 @@ class Juego{
       }
     }
 
-    usarAtaqueAviones(id, jugadorAtacado){
+    //Puntos restados
+    usarAtaqueAviones(id, jugadorAtacado, jugadorAgresor){
       let casillaAtacadaXA = Math.floor(Math.random()*10);
       let casillaAtacadaYA =  Math.floor(Math.random()*10);
       console.log(jugadorAtacado);
-      // console.log(this.jugadores);
-      let indice = devolverIndiceJugador(id, jugadorAtacado);
       console.log("a");
       for (let i = 0; i < 5; i++){
         this.disparar(id, jugadorAtacado, casillaAtacadaXA, casillaAtacadaYA);
-        casillaAtacadaXA = Math.floor(Math.random()*10);
-        casillaAtacadaYA = Math.floor(Math.random()*10);
+        casillaAtacadaXA = Math.floor((Math.random()*10)+1);
+        casillaAtacadaYA = Math.floor((Math.random()*10)+1);
       }
-    }
-
-    usarMisilCrucero(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY) {
-      console.log(typeof casillaAtacadaX);
-      console.log ("piu piu pero mas");
-      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
-      console.log ("piu piu pero mas");
-      this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY);
-      console.log ("piu piu pero mas");
-      this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY);
-      console.log ("piu piu pero mas");
-      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY+1);
-      console.log ("piu piu pero mas");
-      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY-1);
-      console.log ("piu piu pero mas");
-      this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY+1);
-      this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY-1);
-      this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY-1);
-      this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY+1);
+      let indice = devolverIndiceJugador(id, jugadorAgresor);
+      this.jugadores[indice].puntosRestantes -= 10;
     }
 
     //Puntos restados
-    usarAtaqueEMP(jugadorAtacado, jugadorUsado){
-      let indice = devolverIndiceJugador(jugadorAtacado);
+    usarMisilCrucero(id, jugadorAtacado, jugadorAgresor, casillaAtacadaX, casillaAtacadaY) {
+      console.log(typeof casillaAtacadaX);
+
+      this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY);
+      if (casillaAtacadaX+1 < 11){
+        this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY);
+        if (casillaAtacadaY+1 < 11){
+          this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY+1);
+        }
+        if (casillaAtacadaY-1 > 0){
+          this.disparar(id, jugadorAtacado, casillaAtacadaX+1, casillaAtacadaY-1);
+        }
+      }
+      if (casillaAtacadaX-1 > 0){
+        this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY);
+        if (casillaAtacadaY+1 < 11){
+          this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY+1);
+        }
+        if (casillaAtacadaY-1 > 0){
+          this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY-1);
+        }
+      }
+      if (casillaAtacadaY+1 < 11){
+        this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY+1);
+      }
+      if (casillaAtacadaY-1 > 0){
+        this.disparar(id, jugadorAtacado, casillaAtacadaX, casillaAtacadaY-1);
+      }
+
+      let indice = devolverIndiceJugador(id, jugadorAgresor);
+      this.jugadores[indice].puntosRestantes -= 15;
+    }
+
+    //Puntos restados
+    usarAtaqueEMP(id, jugadorAtacado, jugadorAgresor){
+      let indice = devolverIndiceJugador(id, jugadorAtacado);
       this.jugadores[indice].timeOut+=3;
-      indice = devolverIndiceJugador(jugadorUsado);
+      indice = devolverIndiceJugador(id, jugadorAgresor);
       this.jugadores[indice].puntosRestantes -= 25;
     }
 
@@ -679,17 +696,18 @@ class Juego{
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
       console.log("djhfak");
       console.log(mensaje.jugada.jugadorAfectado);
-      juegos.get(mensaje.id).usarSonar(mensaje.id, mensaje.jugada.jugadorAfectado);
+      juegos.get(mensaje.id).usarSonar(mensaje.id, mensaje.jugada.jugadorAfectado, mensaje.jugador);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
     }
-}
+  }
+
   function realizarAvionesDeAtaque(socket, mensaje){
     console.log("avion piu");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
       console.log("1987");
-      juegos.get(mensaje.id).usarAtaqueAviones(mensaje.id, mensaje.jugada.jugadorAfectado);
+      juegos.get(mensaje.id).usarAtaqueAviones(mensaje.id, mensaje.jugada.jugadorAfectado, mensaje.jugador);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
@@ -721,7 +739,7 @@ class Juego{
   function realizarMisilCrucero(socket, mensaje){
     console.log("vacaciones :)");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarMisilCrucero(mensaje.id, mensaje.jugada.jugadorAfectado,  Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
+      juegos.get(mensaje.id).usarMisilCrucero(mensaje.id, mensaje.jugada.jugadorAfectado, mensaje.jugador,  Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
       console.log("juego mandado");
       actualizarJuego(mensaje.id);
     } else {
@@ -742,7 +760,9 @@ class Juego{
   function realizarEMP(socket, mensaje){
     console.log("emp");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.jugada.jugadorAfectado, mensaje.jugada.jugadorAfectado);
+
+      console.log(`QUUQEUUEUQE: ${mensaje.jugador}`);
+      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.id, mensaje.jugada.jugadorAfectado, mensaje.jugador);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
