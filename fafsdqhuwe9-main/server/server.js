@@ -185,21 +185,27 @@ class Juego{
       this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY+1);
     }
 
-    usarAtaqueEMP(jugadorAtacado){
+    //Puntos restados
+    usarAtaqueEMP(jugadorAtacado, jugadorUsado){
       let indice = devolverIndiceJugador(jugadorAtacado);
       this.jugadores[indice].timeOut+=3;
+      indice = devolverIndiceJugador(jugadorUsado);
+      this.jugadores[indice].puntosRestantes -= 25;
     }
 
+    //Puntos restados
     usarRegeneracionRapida(id,jugadorUsado, posX, posY){
       let indice = devolverIndiceJugador(id, jugadorUsado);
       this.jugadores[indice].restaurarVida(posX, posY);
     }
 
+    //Puntos restados
     usarMinaMarina(id, jugadorUsado, posX, posY){
       let indice = devolverIndiceJugador(id, jugadorUsado);
       this.jugadores[indice].ponerMinaMarina(posX, posY);
     }
 
+    //Puntos restados
     usarEscudoDefensivo(id, jugadorUsado, posX, posY){
       let indice = devolverIndiceJugador(id, jugadorUsado);
       this.jugadores[indice].establecerEscudo(posX, posY);
@@ -342,23 +348,15 @@ class Juego{
       let contadorCuras = 2;
       let contaMares = 0
       let i = 0;
-      console.log(this.piezasrestantes);
-      console.log(this.piezasrestantes.indexOf('submarino'));
-      this.curasPorPieza
 
-      
-      console.log(`1: ${this.tablero[posX][posY].golpeada == false}`);
-      console.log(`?????????`);
       if (this.tablero[posX][posY].golpeada == false){
         const pieza = this.piezasrestantes.indexOf(this.tablero[posX][posY].grupo);
-        console.log(`Grupo de Curas por Pieza: ${this.curasPorPieza[pieza]}`);
+
         if (this.curasPorPieza[pieza] == 1){
           let orientacion = this.tablero[posX][posY].orientacion;
-          console.log(`2: ${this.tablero[posX][posY].orientacion}`);
+
           if ((orientacion == "izq-dere") || (orientacion == "dere-izq")){
             i = posY;
-            console.log(`AAA: ${Number(i)+1}`);
-            console.log(`Grupo XY: ${this.tablero[posX][Number(i)+1].grupo }`);
             
             while( i < 11 && contaMares<1 && contadorCuras > 0 && this.tablero[posX][Number(i)+1].grupo == this.piezasrestantes[pieza]){
               i++;
@@ -371,6 +369,7 @@ class Juego{
                 contadorCuras--;
               }
             }
+
             while(i > 0 && contaMares<2 && contadorCuras > 0 && this.tablero[posX][Number(i)-1].grupo == this.piezasrestantes[pieza]){
               i--;
               if (this.tablero[posX][i].grupo == 'mar'){
@@ -378,8 +377,8 @@ class Juego{
               }
               else if (this.tablero[posX][i].golpeada == true){
                 this.tablero[posX][i].golpeada = false;
-                contadorCuras--;
                 this.sumarVidaABarco(this.tablero[posX][posY].grupo);
+                contadorCuras--;
               }
             }
           }
@@ -392,8 +391,8 @@ class Juego{
               }
               else if (this.tablero[i][posY].golpeada == true){
                 this.tablero[i][posY].golpeada = false;
-                contadorCuras--;
                 this.sumarVidaABarco(this.tablero[posX][posY].grupo);
+                contadorCuras--;
               }
             }
             while(i > 0 && contaMares<2 && contadorCuras > 0 && this.tablero[Number(i)-1][posY].grupo == this.piezasrestantes[pieza]){
@@ -403,11 +402,12 @@ class Juego{
               }
               else if (this.tablero[i][posY].golpeada == true){
                 this.tablero[i][posY].golpeada = false;
-                contadorCuras--;
                 this.sumarVidaABarco(this.tablero[posX][posY].grupo);
+                contadorCuras--;
               }
             }
           }
+          this.puntosRestantes -= 10;
           this.curasPorPieza[pieza] = 0;
         }
       }
@@ -431,9 +431,8 @@ class Juego{
     ponerMinaMarina(posX,posy){
       console.log('Plating Claymore 2');
       if (this.tablero[posX][posy].grupo == 'mar'){
-        console.log(`Tipo Inicial: ${this.tablero[posX][posy].tipo}`)
         this.tablero[posX][posy].tipo = 'mina';
-        console.log(`Tipo Post: ${this.tablero[posX][posy].tipo}`)
+        this.puntosRestantes -= 5; 
       }
     }
 
@@ -449,8 +448,10 @@ class Juego{
       this.tablero[posX-1][posY-1].escudos+= 3;
       this.tablero[posX+1][posY-1].escudos+= 3;
       this.tablero[posX-1][posY+1].escudos+= 3;
+
+      this.puntosRestantes -= 15;
     }
-    }
+  }
   
 
   
@@ -741,7 +742,7 @@ class Juego{
   function realizarEMP(socket, mensaje){
     console.log("emp");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.jugada.jugadorAfectado);
+      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.jugada.jugadorAfectado, mensaje.jugada.jugadorAfectado);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
