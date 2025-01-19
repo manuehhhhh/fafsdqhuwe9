@@ -44,49 +44,49 @@
                 </div>
                 <h2 id="titulo-powerups">Inventario de PowerUPs</h2>
                     <ul id="inventario-powerups">
-                        <li id="boton-sonar" powerUp="sonar" >Sonar 
+                        <li id="boton-sonar" powerUp="sonar" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)" >Sonar 
                             <ul class="descripcion-powerup">
                             <li>Disponible mientras el submarino no haya sido hundido.</li>
                             <li>Revela una casilla al azar de un barco enemigo.</li>
                             <li>Costo: 5 puntos por uso.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="avionesDeAtaque">Aviones de Ataque
+                        <li id="boton-sonar" powerUp="avionesDeAtaque" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)">Aviones de Ataque
                             <ul class="descripcion-powerup">
                                 <li>Disponible mientras el portaaviones no haya sido hundido.</li>
                                 <li>Lanza hasta 5 misiles al azar en el tablero enemigo.</li>
                                 <li>Costo: 10 puntos por uso.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="minaMarina">Mina Marina
+                        <li id="boton-sonar" powerUp="minaMarina" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)">Mina Marina
                             <ul class="descripcion-powerup">
                                 <li>Los jugadores pueden plantar una mina en su propio tablero.</li>
                                 <li>Si el enemigo ataca una mina, recibe un "hit" adicional en una casilla adyacente al azar.</li>
                                 <li>Costo: 5 puntos para plantar</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="escudoDefensivo">Escudo Defensivo
+                        <li id="boton-sonar" powerUp="escudoDefensivo" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)">Escudo Defensivo
                             <ul class="descripcion-powerup">
                                 <li>Protege una región de 3x3 casillas durante 3 turnos.</li>
                                 <li>Los ataques en el área protegida son anulados y el enemigo recibe un mensaje de "Bloqueado".</li>
                                 <li>Costo: 15 puntos.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="misilCrucero">Misil Crucero
+                        <li id="boton-sonar" powerUp="misilCrucero" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)">Misil Crucero
                             <ul class="descripcion-powerup">
                                 <li>Ataque dirigido a un área de 3x3 casillas.</li>
                                 <li>Costo: 15 puntos.</li>
                                 <li>Tiempo de recarga: 5 turnos.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="reparacionRapida">Reparación Rápida
+                        <li id="boton-sonar" powerUp="reparacionRapida" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)">Reparación Rápida
                             <ul  class="descripcion-powerup">
                                 <li>Restaura hasta 2 casillas de un barco dañado (no hundido).</li>
                                 <li>Costo: 10 puntos.</li>
                                 <li>Un solo uso por barco.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="emp">Ataque EMP
+                        <li id="boton-sonar" powerUp="emp" onclick="seleccionarPowerUp(this)" ondblclick="deseleccionarPowerUp(this)">Ataque EMP
                             <ul  class="descripcion-powerup">
                                 <li>Desactiva todas las funciones especiales del enemigo durante 3 turnos.</li>
                                 <li>Costo: 25 puntos.</li>
@@ -114,24 +114,24 @@
                         
                         <div id="div-cabezas">
 
-                            <div class="container portaviones" id="container1">
-                                <div class="dragHead " id="portaviones" draggable="true" largo="5">x5</div>
+                            <div class="container portaviones agua" id="container1">
+                                <div class="dragHead " id="portaviones" draggable="true" largo="5"></div>
                             </div>
 
-                            <div class="container acorazado" id="container2">
-                                <div class="dragHead" id="acorazado" draggable="true" largo="4">x4</div>
+                            <div class="container acorazado agua" id="container2">
+                                <div class="dragHead" id="acorazado" draggable="true" largo="4"></div>
                             </div>
 
-                            <div class="container crucero" id="container3">
-                                <div class="dragHead" id="crucero" draggable="true" largo="3">x3</div>
+                            <div class="container crucero agua" id="container3">
+                                <div class="dragHead" id="crucero" draggable="true" largo="3"></div>
                             </div>
 
-                            <div class="container submarino" id="container4">
-                                <div class="dragHead" id="submarino" draggable="true" largo="3">x3</div>
+                            <div class="container submarino agua" id="container4">
+                                <div class="dragHead" id="submarino" draggable="true" largo="3"></div>
                             </div>
 
-                            <div class="container destructor" id="container5">
-                                <div class="dragHead" id="destructor" draggable="true" largo="2">x2</div>
+                            <div class="container destructor agua" id="container5">
+                                <div class="dragHead" id="destructor" draggable="true" largo="2"></div>
                             </div>
 
                         </div>
@@ -219,7 +219,22 @@
                 // console.log(juegoId);
             }
 
-            
+            function seleccionarPowerUp(elemento) {
+            let lis = document.getElementById("inventario-powerups").getElementsByTagName("li");
+            // Desmarcar todos los powerups
+            for (let i = 0; i < lis.length; i++) {
+                lis[i].classList.remove("seleccionado");
+            }
+            // Marcar el powerup seleccionado
+            elemento.classList.add("seleccionado");
+            powerUpActivo = elemento.getAttribute("powerUp");
+            }
+
+            function deseleccionarPowerUp(elemento) {
+            // Desmarcar el powerup seleccionado
+            elemento.classList.remove("seleccionado");
+            powerUpActivo = null;
+            }
 
             function configurarMenuPowerUps(){
                 document.getElementById("titulo-powerups").style.display = "block";
@@ -230,7 +245,6 @@
                         powerUpActivo = (powerUpActivo == "disparar")? lis[i].getAttribute("powerUp") : "disparar";
                     })
                 }
-
             }
 
             document.getElementById("boton-iniciar").addEventListener('click', ()=>{
@@ -396,9 +410,7 @@
                             tamanoAux--;
                             j++;
                         }
-                        
-
-                        if(posAX+tamano-1 <= 10 && ocupado == false){
+                        if(posAX+tamano <= 10 && ocupado == false){
                             while(tamano > 0){
                                 console.log("prueba1");
                                 tablero[posAY][posAX+i].tipo = tipo + tamano.toString();
@@ -425,12 +437,7 @@
                             tamanoAux--;
                             j++;
                         }
-                        console.log(`SISISI: ${ocupado}`);
-                        console.log(`SISISI: ${posAX}`);
-                        console.log(`SISISI: ${tamano}`);
-                        console.log(`SISISI: ${posAX-tamano+1}`);
-
-                        if(posAX-tamano+1 >= 1 && ocupado == false){
+                        if(posAX-tamano >= 1 && ocupado == false){
                             while(tamano > 0){
                                 console.log("prueba1");
                                         tablero[posAY][posAX-i].tipo = tipo + tamano.toString();
@@ -457,7 +464,7 @@
                             j++;
                         }
 
-                        if(posAY+tamano-1 <= 10 && ocupado == false){
+                        if(posAY+tamano <= 10 && ocupado == false){
 
                             while(tamano > 0){
                                 console.log("prueba1");
@@ -484,7 +491,7 @@
                             tamanoAux--;
                             j++;
                         }
-                    if(posAY-tamano+1 >= 1 && ocupado == false){
+                    if(posAY-tamano >= 1 && ocupado == false){
                         while(tamano > 0){
                                     console.log("prueba1");
                                     tablero[posAY-i][posAX].tipo = tipo + tamano.toString();
@@ -608,11 +615,11 @@
             
             function manejarEventosJuegoIniciado(i){
                 let mandar;
-                console.log(`accion: ${powerUpActivo}`);
-                switch (powerUpActivo){
+                console.log(powerUpActivo);
+               switch (powerUpActivo){
                 case "disparar":
                     mandar = new mensaje("disparar", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
-                    console.log(`ESTO ES MANDAR: ${mandar}`);
+                    console.log(mandar);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "sonar":

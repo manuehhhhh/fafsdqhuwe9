@@ -47,11 +47,20 @@ class Juego{
                 }
             }
         }
+
+
         if(this.jugadorActual+1 < this.jugadores.length){
           this.jugadorActual++;
         } else {
           this.jugadorActual = 0;
         }
+        if (this.jugadores[this.jugadorActual].timeOut > 1){
+          this.jugadores[this.jugadorActual].timeOut--;
+          this.jugadorActual = (this.jugadorActual+1 < this.jugadores.length)? this.jugadorActual+=1: 0;
+          console.log(this.jugadores[this.jugadorActual].timeOut);
+          console.log("jijijaja");
+        }
+
 
         
     }
@@ -162,14 +171,15 @@ class Juego{
       this.disparar(id, jugadorAtacado, casillaAtacadaX-1, casillaAtacadaY+1);
     }
 
-    usarAtaqueEMP(jugadorAtacado){
-      let indice = devolverIndiceJugador(jugadorAtacado);
+    usarAtaqueEMP(id, jugadorAtacado){
+      let indice = devolverIndiceJugador(id, jugadorAtacado);
       this.jugadores[indice].timeOut+=3;
+      console.log(this.jugadores[indice].timeOut);
     }
 
-    usarRegeneracionRapida(id,jugadorUsado, posX, posY){
-      let indice = devolverIndiceJugador(id, jugadorUsado);
-      this.jugadores[indice].restaurarVida(posX, posY);
+    usarRegeneracionRapida(jugadorUsado, posX, posY){
+      let indice = devolverIndiceJugador(jugadorAtacado);
+      this.jugadores[indice].restaurarVida(jugadorUsado);
     }
 
     usarEscudoDefensivo(id, jugadorUsado, posX, posY){
@@ -194,7 +204,6 @@ class Juego{
         this.timeOut = 0;
         this.piezasrestantes = [];
         this.vidasPorPiezas = [];
-        this.curasPorPieza = [1,1,1,1,1];
   
         let tabla = [];
         let Aux = [];
@@ -294,90 +303,20 @@ class Juego{
     }
 
     restaurarVida(posX, posY){
-      console.log(`CLARO QUE HA LLEGAOOOO`);
-      let contadorCuras = 2;
-      let contaMares = 0
-      let i = 0;
-      console.log(this.piezasrestantes);
-      console.log(this.piezasrestantes.indexOf('submarino'));
-      this.curasPorPieza
-
-      
-      console.log(`1: ${this.tablero[posX][posY].golpeada == false}`);
-      console.log(`?????????`);
-      if (this.tablero[posX][posY].golpeada == false){
-        const pieza = this.piezasrestantes.indexOf(this.tablero[posX][posY].grupo);
-        if (this.curasPorPieza[pieza] == 1){
-          let orientacion = this.tablero[posX][posY].orientacion;
-          console.log(`2: ${this.tablero[posX][posY].orientacion}`);
-          if ((orientacion == "izq-dere") || (orientacion == "dere-izq")){
-            i = posY;
-            while( i < 11 && contaMares<1 && contadorCuras > 0 && tablero[posX][i].grupo == this.piezasrestantes[pieza]){
-              i++;
-              console.log(`i: ${i}, x: ${posX}, y: ${posY}`);
-              console.log(`Grupo: ${this.tablero[posX][i].grupo}`);
-              console.log(`Golpeada: ${this.tablero[posX][i].golpeada}`);
-              console.log(`ContaMares: ${contaMares}`);
-              console.log(`ContaCuras: ${contadorCuras}`);
-              if (this.tablero[posX][i].grupo == 'mar'){
-                contaMares++;
-              }
-              else if (this.tablero[posX][i].golpeada == true){
-                this.tablero[posX][i].golpeada = false;
-                contadorCuras--;
-              }
-            }
-            while(i > 0 && contaMares<2 && contadorCuras > 0 && tablero[posX][i].grupo == this.piezasrestantes[pieza]){
-              i--;
-              if (this.tablero[posX][i].grupo == 'mar'){
-                contaMares++;
-              }
-              else if (this.tablero[posX][i].golpeada == true){
-                this.tablero[posX][i].golpeada = false;
-                contadorCuras--;
-              }
-            }
-          }
-          else{
-            i = posX;
-            while( i < 11 && contaMares<1 && contadorCuras > 0 && tablero[i][posY].grupo == this.piezasrestantes[pieza]){
-              i++;
-              if (this.tablero[i][posY].grupo == 'mar'){
-                contaMares++;
-              }
-              else if (this.tablero[i][posY].golpeada == true){
-                this.tablero[i][posY].golpeada = false;
-                contadorCuras--;
-              }
-            }
-            while(i > 0 && contaMares<2 && contadorCuras > 0 && tablero[i][posY].grupo == this.piezasrestantes[pieza]){
-              i--;
-              if (this.tablero[i][posY].grupo == 'mar'){
-                contaMares++;
-              }
-              else if (this.tablero[i][posY].golpeada == true){
-                this.tablero[i][posY].golpeada = false;
-                contadorCuras--;
-              }
-            }
-          }
+      let orientacion = this.tablero[posX][posY].orientacion;
+      if ( (orientacion == "iqz-dere") || (orientacion == "dere-izq") ){
+        this.tablerotablero[posX][posY].golpeada = false;
+        if (posx + 1 <= 11){
+          let i = (this.tablerotablero[posX+1][posY].grupo == "mar")? -1: 1;
+          this.tablerotablero[posX+i][posY].golepada == false;
+        }
+      } else if ( (orientacion == "arr-abj") || (orientacion == "abj-arr") ){
+        this.tablerotablero[posX][posY].golpeada = false;
+        if (posy + 1 <= 11){
+          let i = (this.tablerotablero[posX][posY+1].grupo == "mar")? -1: 1;
+          this.tablerotablero[posX][posY+i].golepada == false;
         }
       }
-
-
-      // if ( (orientacion == "iqz-dere") || (orientacion == "dere-izq") ){
-      //   // this.tablerotablero[posX][posY].golpeada = false;
-      //   if (posX + 1 <= 11){
-      //     let i = (this.tablerotablero[posX+1][posY].grupo == "mar")? -1: 1;
-      //     this.tablerotablero[posX+i][posY].golepada == false;
-      //   }
-      // } else if ( (orientacion == "arr-abj") || (orientacion == "abj-arr") ){
-      //   this.tablerotablero[posX][posY].golpeada = false;
-      //   if (posy + 1 <= 11){
-      //     let i = (this.tablerotablero[posX][posY+1].grupo == "mar")? -1: 1;
-      //     this.tablerotablero[posX][posY+i].golepada == false;
-      //   }
-      // }
     }
 
     establecerEscudo(posX, posY){
@@ -513,11 +452,12 @@ class Juego{
     console.log(longitud);
     while (j < longitud){
       console.log(j);
+      console.log("hu");
       console.log(juegos.get(id).jugadores[j].nombre);
-      console.log(`Nombre en devolverIndice: ${nombre}`);
+      console.log(nombre);
+      console.log("hu");
       if (juegos.get(id).jugadores[j].nombre == nombre){
         return j;
-        console.log(`j: ${j}`)
       }
       j++;
     }
@@ -662,7 +602,7 @@ class Juego{
   function realizarRegeneracionRapida(socket, mensaje){
     console.log("culito de rana");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarRegeneracionRapida(mensaje.id,mensaje.jugada.jugadorAfectado,mensaje.jugada.X, mensaje.jugada.Y);
+      juegos.get(mensaje.id).usarRegeneracionRapida(mensaje.jugada.jugadorAfectado,  mensaje.jugada.X, mensaje.jugada.Y);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
@@ -672,7 +612,7 @@ class Juego{
   function realizarEMP(socket, mensaje){
     console.log("emp");
     if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
-      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.jugada.jugadorAfectado);
+      juegos.get(mensaje.id).usarAtaqueEMP(mensaje.id, mensaje.jugada.jugadorAfectado);
       actualizarJuego(mensaje.id);
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
