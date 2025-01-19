@@ -77,17 +77,18 @@ main{
     background-image: url('../images/barco-bottom.png');
     background-size: contain;
 } */
-.position[golpeada="true"]{
+
+.position[grupo='mar'][visible='true'][golpeada="true"]{
     filter:  hue-rotate(180deg);
     background-size: contain;
 }
 
+
+/* ------------------------------------------------------------------------------------------------- */
 .position[grupo='portaviones'][visible='true'][golpeada='false']{
     background-color: #2e579d;
     background-size: cover;
 }
-
-
 
 .position.portaviones5[grupo='portaviones'][visible='true'][golpeada='false']{
     background-image: url(../images/Portaviones/Portaviones1.png);
@@ -105,10 +106,70 @@ main{
     background-image: url(../images/Portaviones/Portaviones5.png);
 }
 
-.position[grupo='acorazado'][visible='true'][golpeada='false']{
+.position.portaviones5[grupo='portaviones'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: portaviones5-fire 1s steps(1) infinite;
+}
+@keyframes portaviones5-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Portaviones/Portaviones1.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Portaviones/Portaviones1.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Portaviones/Portaviones1.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Portaviones/Portaviones1.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Portaviones/Portaviones1.png)}
+}
+.position.portaviones4[grupo='portaviones'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: portaviones4-fire 1s steps(1) infinite;
+}
+@keyframes portaviones4-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Portaviones/Portaviones2.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Portaviones/Portaviones2.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Portaviones/Portaviones2.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Portaviones/Portaviones2.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Portaviones/Portaviones2.png)}
+}
+.position.portaviones3[grupo='portaviones'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: portaviones3-fire 1s steps(1) infinite;
+}
+@keyframes portaviones3-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Portaviones/Portaviones3.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Portaviones/Portaviones3.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Portaviones/Portaviones3.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Portaviones/Portaviones3.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Portaviones/Portaviones3.png)}
+}
+.position.portaviones2[grupo='portaviones'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: portaviones2-fire 1s steps(1) infinite;
+}
+@keyframes portaviones2-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Portaviones/Portaviones4.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Portaviones/Portaviones4.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Portaviones/Portaviones4.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Portaviones/Portaviones4.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Portaviones/Portaviones4.png)}
+}
+.position.portaviones1[grupo='portaviones'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: portaviones1-fire 1s steps(1) infinite;
+}
+@keyframes portaviones1-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Portaviones/Portaviones5.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Portaviones/Portaviones5.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Portaviones/Portaviones5.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Portaviones/Portaviones5.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Portaviones/Portaviones5.png)}
+}
+/* ----------------------------------------------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------------------------------------------- */
+.position[grupo='acorazado'][visible='true']{
     background-color: #2e579d;
     background-size: cover;
 }
+
 .position.acorazado4[grupo='acorazado'][visible='true'][golpeada='false']{
     background-image: url(../images/Acorazado/Acorazado1.png);
 }
@@ -122,10 +183,62 @@ main{
     background-image: url(../images/Acorazado/Acorazado4.png);
 }
 
-.position[grupo='crucero'][visible='true'][golpeada='false']{
+.position.acorazado4[grupo='acorazado'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: acorazado4-fire 1s steps(1) infinite;
+}
+@keyframes acorazado4-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Acorazado/Acorazado1.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Acorazado/Acorazado1.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Acorazado/Acorazado1.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Acorazado/Acorazado1.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Acorazado/Acorazado1.png)}
+}
+
+.position.acorazado3[grupo='acorazado'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: acorazado3-fire 1s steps(1) infinite;
+}
+@keyframes acorazado3-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Acorazado/Acorazado2.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Acorazado/Acorazado2.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Acorazado/Acorazado2.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Acorazado/Acorazado2.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Acorazado/Acorazado2.png)}
+}
+
+.position.acorazado2[grupo='acorazado'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: acorazado2-fire 1s steps(1) infinite;
+}
+@keyframes acorazado2-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Acorazado/Acorazado3.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Acorazado/Acorazado3.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Acorazado/Acorazado3.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Acorazado/Acorazado3.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Acorazado/Acorazado3.png)}
+}
+
+.position.acorazado1[grupo='acorazado'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: acorazado1-fire 1s steps(1) infinite;
+}
+@keyframes acorazado1-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Acorazado/Acorazado4.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Acorazado/Acorazado4.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Acorazado/Acorazado4.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Acorazado/Acorazado4.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Acorazado/Acorazado4.png)}
+}
+/* ------------------------------------------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------------------------------------------- */
+.position[grupo='crucero'][visible='true']{
     background-color: #2e579d;
     background-size: cover;
 }
+
 .position.crucero3[grupo='crucero'][visible='true'][golpeada='false']{
     background-image: url(../images/Crucero/Crucero1.png);
 }
@@ -136,10 +249,50 @@ main{
     background-image: url(../images/Crucero/Crucero3.png);
 }
 
-.position[grupo='submarino'][visible='true'][golpeada='false']{
+.position.crucero3[grupo='crucero'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: crucero3-fire 1s steps(1) infinite;
+}
+@keyframes crucero3-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Crucero/Crucero1.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Crucero/Crucero1.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Crucero/Crucero1.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Crucero/Crucero1.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Crucero/Crucero1.png)}
+}
+
+.position.crucero2[grupo='crucero'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: crucero2-fire 1s steps(1) infinite;
+}
+@keyframes crucero2-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Crucero/Crucero2.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Crucero/Crucero2.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Crucero/Crucero2.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Crucero/Crucero2.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Crucero/Crucero2.png)}
+}
+
+.position.crucero1[grupo='crucero'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: crucero1-fire 1s steps(1) infinite;
+}
+@keyframes crucero1-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Crucero/Crucero3.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Crucero/Crucero3.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Crucero/Crucero3.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Crucero/Crucero3.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Crucero/Crucero3.png)}
+}
+/* ----------------------------------------------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------------------------------------------- */
+.position[grupo='submarino'][visible='true']{
     background-color: #2e579d;
     background-size: cover;
 }
+
 .position.submarino3[grupo='submarino'][visible='true'][golpeada='false']{
     background-image: url(../images/Submarino/Submarino1.png);
 }
@@ -150,16 +303,80 @@ main{
     background-image: url(../images/Submarino/Submarino3.png);
 }
 
-.position[grupo='destructor'][visible='true'][golpeada='false']{
+.position.submarino3[grupo='submarino'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: submarino3-fire 1s steps(1) infinite;
+}
+@keyframes submarino3-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Submarino/Submarino1.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Submarino/Submarino1.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Submarino/Submarino1.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Submarino/Submarino1.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Submarino/Submarino1.png)}
+}
+.position.submarino2[grupo='submarino'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: submarino2-fire 1s steps(1) infinite;
+}
+@keyframes submarino2-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Submarino/Submarino2.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Submarino/Submarino2.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Submarino/Submarino2.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Submarino/Submarino2.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Submarino/Submarino2.png)}
+}
+.position.submarino1[grupo='submarino'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: submarino1-fire 1s steps(1) infinite;
+}
+@keyframes submarino1-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Submarino/Submarino3.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Submarino/Submarino3.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Submarino/Submarino3.png);}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Submarino/Submarino3.png);}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Submarino/Submarino3.png);}
+}
+/* ----------------------------------------------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------------------------------------------- */
+.position[grupo='destructor'][visible='true']{
     background-color: #2e579d;
     background-size: cover;
 }
+
 .position.destructor2[grupo='destructor'][visible='true'][golpeada='false']{
     background-image: url(../images/Destructor/Destructor1.png);
 }
 .position.destructor1[grupo='destructor'][visible='true'][golpeada='false']{
     background-image: url(../images/Destructor/Destructor2.png);
 }
+
+.position.destructor2[grupo='destructor'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: destructor2-fire 1s steps(1) infinite;
+}
+@keyframes destructor2-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Destructor/Destructor1.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Destructor/Destructor1.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Destructor/Destructor1.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Destructor/Destructor1.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Destructor/Destructor1.png)}
+}
+
+.position.destructor1[grupo='destructor'][visible='true'][golpeada='true']{
+    background-color: #2e579d;
+    animation: destructor1-fire 1s steps(1) infinite;
+}
+@keyframes destructor1-fire {
+    0%{ background-image: url(../images/Fire/Fire1.png), url(../images/Destructor/Destructor2.png);}
+    25%{ background-image: url(../images/Fire/Fire2.png), url(../images/Destructor/Destructor2.png);}
+    50%{background-image: url(../images/Fire/Fire3.png), url(../images/Destructor/Destructor2.png)}
+    75%{background-image: url(../images/Fire/Fire4.png), url(../images/Destructor/Destructor2.png)}
+    100%{background-image: url(../images/Fire/Fire5.png), url(../images/Destructor/Destructor2.png)}
+}
+/* ----------------------------------------------------------------------------------------------------- */
+
 
 div:not([grupo='mar'])[orientacion='izq-dere']{
     transform: none;
@@ -244,6 +461,8 @@ ul#inventario-powerups li{
 ul#inventario-powerups li:hover{
     background-color: lightblue;
 }
+
+
 
 .descripcion-powerup{
     display: none;
