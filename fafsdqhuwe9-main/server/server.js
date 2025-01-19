@@ -28,14 +28,20 @@ class Juego{
         this.jugadorActual = 0;
         this.cantidadJugadores = 0;
     }
+
+
   
     disparar(id, jugadorAtacado, posicionX, posicionY){
       console.log("dfjajf");
         for (const jugador of this.jugadores){
             console.log("po");
-            console.log(jugador.nombre);
-            console.log(jugadorAtacado);
+            console.log(`JUGADOR.NOMBREEEE: ${jugador.nombre}`);
+            console.log(`jugadorATACADOOO: ${jugadorAtacado}`);
+            console.log(`PosX: ${posicionX} PosY: ${posicionY}`);
+            // console.log(`PosX: ${jugador.tablero}`);
+            console.log(`TIPO: ${jugador.tablero[Number(posicionX)][Number(posicionY)].tipo}`);
             if (jugador.nombre == jugadorAtacado){  
+              if(jugador.tablero[posicionX][posicionY].tipo !== 'mina'){
                 console.log("encontramo");
                 jugador.perderCasilla(posicionX, posicionY);
                 console.log("eeeeeeeeeeeeeeee");
@@ -45,6 +51,23 @@ class Juego{
                   this.eliminarJugador(id, jugadorAtacado);
                   this.jugadorActual--;
                 }
+              }
+              else{
+              	console.log(`jugadorATACANNDO: ${this.jugadores[this.jugadorActual].nombre}`);
+                jugador.perderCasilla(posicionX, posicionY);
+                this.jugadores[this.jugadorActual].perderCasilla(posicionX,posicionY);
+                let i = Math.round(Math.random() * 2) - 1;
+                let j = Math.round(Math.random() * 2) - 1;
+                console.log(`1 i: ${i}`);
+                console.log(`1 j: ${j}`);
+                while ( 0 > Number(posicionX)+i || Number(posicionX)+i > 10 || 0 > Number(posicionY)+j || Number(posicionY)+j > 10 || Number(posicionX)+i == posicionX || Number(posicionY)+j == posicionY){
+                  i = Math.round(Math.random() * 2) - 1;
+                  j = Math.round(Math.random() * 2) - 1;
+                  console.log(`i: ${i}`);
+                  console.log(`j: ${j}`);
+                }
+                this.jugadores[this.jugadorActual].perderCasilla(Number(posicionX)+i,Number(posicionY)+j)
+              }
             }
         }
         if(this.jugadorActual+1 < this.jugadores.length){
@@ -172,6 +195,11 @@ class Juego{
       this.jugadores[indice].restaurarVida(posX, posY);
     }
 
+    usarMinaMarina(id, jugadorUsado, posX, posY){
+      let indice = devolverIndiceJugador(id, jugadorUsado);
+      this.jugadores[indice].ponerMinaMarina(posX, posY);
+    }
+
     usarEscudoDefensivo(id, jugadorUsado, posX, posY){
       let indice = devolverIndiceJugador(id, jugadorUsado);
       this.jugadores[indice].establecerEscudo(posX, posY);
@@ -190,7 +218,7 @@ class Juego{
     constructor(name, socket){
         this.nombre = name;
         this.socket = socket;
-        this.puntosRestantes  = 1000;
+        this.puntosRestantes  = 100;
         this.timeOut = 0;
         this.piezasrestantes = [];
         this.vidasPorPiezas = [];
@@ -234,6 +262,22 @@ class Juego{
         i++;
       }
     } 
+
+    sumarVidaABarco(nombreBarco){
+      let i = 0;
+      console.log("SUMANDO VIDA ACA");
+      console.log(this.piezasrestantes);
+      console.log(nombreBarco);
+      while ( i < this.piezasrestantes.length){
+        console.log(i);
+        if (this.piezasrestantes[i] == nombreBarco){
+          this.vidasPorPiezas[i]++;
+          // console.log("Vidas de: "+ nombreBarco + this.vidasPorPiezas[i].toString());
+          console.log(`Vidas sumada a: ${nombreBarco} total: ${this.vidasPorPiezas[i]}`);
+        }
+        i++;
+      }
+    }
 
 
   
@@ -307,27 +351,27 @@ class Juego{
       console.log(`?????????`);
       if (this.tablero[posX][posY].golpeada == false){
         const pieza = this.piezasrestantes.indexOf(this.tablero[posX][posY].grupo);
+        console.log(`Grupo de Curas por Pieza: ${this.curasPorPieza[pieza]}`);
         if (this.curasPorPieza[pieza] == 1){
           let orientacion = this.tablero[posX][posY].orientacion;
           console.log(`2: ${this.tablero[posX][posY].orientacion}`);
           if ((orientacion == "izq-dere") || (orientacion == "dere-izq")){
             i = posY;
-            while( i < 11 && contaMares<1 && contadorCuras > 0 && tablero[posX][i].grupo == this.piezasrestantes[pieza]){
+            console.log(`AAA: ${Number(i)+1}`);
+            console.log(`Grupo XY: ${this.tablero[posX][Number(i)+1].grupo }`);
+            
+            while( i < 11 && contaMares<1 && contadorCuras > 0 && this.tablero[posX][Number(i)+1].grupo == this.piezasrestantes[pieza]){
               i++;
-              console.log(`i: ${i}, x: ${posX}, y: ${posY}`);
-              console.log(`Grupo: ${this.tablero[posX][i].grupo}`);
-              console.log(`Golpeada: ${this.tablero[posX][i].golpeada}`);
-              console.log(`ContaMares: ${contaMares}`);
-              console.log(`ContaCuras: ${contadorCuras}`);
               if (this.tablero[posX][i].grupo == 'mar'){
                 contaMares++;
               }
               else if (this.tablero[posX][i].golpeada == true){
                 this.tablero[posX][i].golpeada = false;
+                this.sumarVidaABarco(this.tablero[posX][posY].grupo);
                 contadorCuras--;
               }
             }
-            while(i > 0 && contaMares<2 && contadorCuras > 0 && tablero[posX][i].grupo == this.piezasrestantes[pieza]){
+            while(i > 0 && contaMares<2 && contadorCuras > 0 && this.tablero[posX][Number(i)-1].grupo == this.piezasrestantes[pieza]){
               i--;
               if (this.tablero[posX][i].grupo == 'mar'){
                 contaMares++;
@@ -335,12 +379,13 @@ class Juego{
               else if (this.tablero[posX][i].golpeada == true){
                 this.tablero[posX][i].golpeada = false;
                 contadorCuras--;
+                this.sumarVidaABarco(this.tablero[posX][posY].grupo);
               }
             }
           }
           else{
             i = posX;
-            while( i < 11 && contaMares<1 && contadorCuras > 0 && tablero[i][posY].grupo == this.piezasrestantes[pieza]){
+            while( i < 11 && contaMares<1 && contadorCuras > 0 && this.tablero[Number(i)+1][posY].grupo == this.piezasrestantes[pieza]){
               i++;
               if (this.tablero[i][posY].grupo == 'mar'){
                 contaMares++;
@@ -348,9 +393,10 @@ class Juego{
               else if (this.tablero[i][posY].golpeada == true){
                 this.tablero[i][posY].golpeada = false;
                 contadorCuras--;
+                this.sumarVidaABarco(this.tablero[posX][posY].grupo);
               }
             }
-            while(i > 0 && contaMares<2 && contadorCuras > 0 && tablero[i][posY].grupo == this.piezasrestantes[pieza]){
+            while(i > 0 && contaMares<2 && contadorCuras > 0 && this.tablero[Number(i)-1][posY].grupo == this.piezasrestantes[pieza]){
               i--;
               if (this.tablero[i][posY].grupo == 'mar'){
                 contaMares++;
@@ -358,9 +404,11 @@ class Juego{
               else if (this.tablero[i][posY].golpeada == true){
                 this.tablero[i][posY].golpeada = false;
                 contadorCuras--;
+                this.sumarVidaABarco(this.tablero[posX][posY].grupo);
               }
             }
           }
+          this.curasPorPieza[pieza] = 0;
         }
       }
 
@@ -378,6 +426,15 @@ class Juego{
       //     this.tablerotablero[posX][posY+i].golepada == false;
       //   }
       // }
+    }
+
+    ponerMinaMarina(posX,posy){
+      console.log('Plating Claymore 2');
+      if (this.tablero[posX][posy].grupo == 'mar'){
+        console.log(`Tipo Inicial: ${this.tablero[posX][posy].tipo}`)
+        this.tablero[posX][posy].tipo = 'mina';
+        console.log(`Tipo Post: ${this.tablero[posX][posy].tipo}`)
+      }
     }
 
     establecerEscudo(posX, posY){
@@ -458,7 +515,8 @@ class Juego{
             realizarAvionesDeAtaque(socket, mensaje);
             break;
       case "minaMarina":
-            console.log("tipo, honestamente? este no lo quiero hacer");
+            // console.log("tipo, honestamente? este no lo quiero hacer");
+            realizarMinaMarina(socket,mensaje);
             break;
       case "escudoDefensivo":
             realizarEscudoDefensivo(socket, mensaje);
@@ -635,6 +693,17 @@ class Juego{
     } else {
       mandarMensaje(socket, 'no es tu turno >:(');
     }
+  }
+
+  function realizarMinaMarina(socket, mensaje){
+    console.log('plating claymor');
+    if((juegos.has(mensaje.id)) && (juegos.get(mensaje.id).jugadores[juegos.get(mensaje.id).jugadorActual].nombre) == mensaje.jugador){
+      juegos.get(mensaje.id).usarMinaMarina(mensaje.id, mensaje.jugada.jugadorAfectado,Number(mensaje.jugada.X), Number(mensaje.jugada.Y));
+      actualizarJuego(mensaje.id);
+    } else {
+      mandarMensaje(socket, 'no es tu turno >:(');
+    }
+
   }
 
 
