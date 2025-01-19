@@ -542,13 +542,43 @@ div#control-piezas div#div-cabezas{
 } 
 
 .dragHead{
-    height: 30px;
-    width: 15px;
-    border: 0.5px solid #eeee;
+    height: 60px;
+    width: 30px;
+    /* border: 0.5px solid #eeee; */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: grab;
-    background-color: crimson;
+}
+
+div.dragHead#portaviones{
+    background-image: url(../images/portaviones.png);
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+div.dragHead#acorazado{ 
+    background-image: url(../images/acorazado.png);
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+div.dragHead#crucero{
+    background-image: url(../images/crucero.png);
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+div.dragHead#submarino{
+    background-image: url(../images/submarino.png);
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+div.dragHead#destructor{
+    background-image: url(../images/destructor.png);
+    background-size: cover;
+    color: white;
+    text-align: center;
 }

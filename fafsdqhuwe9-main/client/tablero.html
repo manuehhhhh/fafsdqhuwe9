@@ -114,24 +114,24 @@
                         
                         <div id="div-cabezas">
 
-                            <div class="container portaviones agua" id="container1">
-                                <div class="dragHead " id="portaviones" draggable="true" largo="5"></div>
+                            <div class="container portaviones" id="container1">
+                                <div class="dragHead " id="portaviones" draggable="true" largo="5">x5</div>
                             </div>
 
-                            <div class="container acorazado agua" id="container2">
-                                <div class="dragHead" id="acorazado" draggable="true" largo="4"></div>
+                            <div class="container acorazado" id="container2">
+                                <div class="dragHead" id="acorazado" draggable="true" largo="4">x4</div>
                             </div>
 
-                            <div class="container crucero agua" id="container3">
-                                <div class="dragHead" id="crucero" draggable="true" largo="3"></div>
+                            <div class="container crucero" id="container3">
+                                <div class="dragHead" id="crucero" draggable="true" largo="3">x3</div>
                             </div>
 
-                            <div class="container submarino agua" id="container4">
-                                <div class="dragHead" id="submarino" draggable="true" largo="3"></div>
+                            <div class="container submarino" id="container4">
+                                <div class="dragHead" id="submarino" draggable="true" largo="3">x3</div>
                             </div>
 
-                            <div class="container destructor agua" id="container5">
-                                <div class="dragHead" id="destructor" draggable="true" largo="2"></div>
+                            <div class="container destructor" id="container5">
+                                <div class="dragHead" id="destructor" draggable="true" largo="2">x2</div>
                             </div>
 
                         </div>
@@ -608,11 +608,11 @@
             
             function manejarEventosJuegoIniciado(i){
                 let mandar;
-                console.log(powerUpActivo);
-               switch (powerUpActivo){
+                console.log(`accion: ${powerUpActivo}`);
+                switch (powerUpActivo){
                 case "disparar":
                     mandar = new mensaje("disparar", juegoId, nombreJugador,new Jugada(mostrandoMenu, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "disparo", obtenerTablero()), tipo);
-                    console.log(mandar);
+                    console.log(`ESTO ES MANDAR: ${mandar}`);
                     socket.send(JSON.stringify(mandar));
                     break;
                 case "sonar":
