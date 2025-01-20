@@ -166,6 +166,10 @@
             let tipo = "portaviones";
             let powerUpActivo = "disparar";
             let partidaIniciada = false;
+            let partidaDeTorneo = false;
+            let torneoId = "";
+            let ronda = 0;
+            let crearTorneo = false;
             let mostrandoMenu;
             definirDatos();
             let botonesPosicion = document.getElementsByClassName("boton-pieza");
@@ -215,6 +219,10 @@
                 juegoId = urlParams.get('id');
                 crear = urlParams.get('create');
                 mostrandoMenu = nombreJugador;
+                partidaDeTorneo = (urlParams.get("torneo") =="1");
+                torneoId = juegoId;
+                ronda = urlParams.get("Ronda");
+                crearTorneo= (urlParams.get("createTorneo") =="1");
                 // console.log(nombreJugador);
                 // console.log(juegoId);
             }

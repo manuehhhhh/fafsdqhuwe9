@@ -31,6 +31,8 @@
                 <label for="nombre-jugador">Nombre jugador</label>
                 <input type="text" name="nombre-jugador" id="nombre-jugador" maxlength="16" placeholder="Manuel Martinez" required>
                 <label for="cantidad-de-jugadores">Cantidad de Jugadores</label>
+                <input type="checkbox" name="toggle-torneo" id="toggle-torneo" max="4" min="2" value="2">
+                <label for="toggle-torneo">Torneo?</label>
                 <input type="number" name="cantidad-de-jugadores" id="cantidad-de-jugadores" max="4" min="2" value="2" required>
                 <label for="cantidad-de-puntos">Cantidad de Puntos</label>
                 <input type="number" name="cantidad-de-puntos" id="cantidad-de-puntos" max="50" min="0" value="0" required>
@@ -107,7 +109,11 @@
             document.getElementById('crear-partida').addEventListener('click', () => {
                 const id = document.getElementById('sala-ID').value;
                 const nombre = document.getElementById('nombre-jugador').value;
-                window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=1");
+                if(document.getElementById("toggle-torneo").checked){
+                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=1&torneo=1&createTorneo=1&idTorneo="+id+"&Ronda=1");
+                } else {
+                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=1&torneo=0&createTorneo=0&idTorneo="+id+"&Ronda=0");
+                }
             });
         </script>
     </body>
