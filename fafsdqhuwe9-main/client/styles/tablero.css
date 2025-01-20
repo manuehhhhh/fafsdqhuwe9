@@ -83,6 +83,10 @@ main{
     background-size: contain;
 }
 
+.position.mina[visible="true"][golpeada="false"][grupo="mar"]{
+    background-image: url(../images/mina.png), url(../images/oceantile.png);
+    background-size: cover;
+}
 
 /* ------------------------------------------------------------------------------------------------- */
 .position[grupo='portaviones'][visible='true'][golpeada='false']{

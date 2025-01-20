@@ -349,6 +349,7 @@
 
             function dibujarTablero(tablero, propio){
                 let hijo;
+                const abc = ['A','B','C','D','E','F','G','H','I','J']
                 // console.log(tablero);
                 for (const linea of tablero){
                     // console.log("linea procesando:");
@@ -365,6 +366,14 @@
                         hijo.classList.add("position");
                         // console.log(`QUE PASA TIOOO: ${casilla.tipo}`)
                         hijo.classList.add(casilla.tipo);
+                        if (casilla.tipo == 'guia'){
+                            if (casilla.posX !== 0){
+                                hijo.textContent = `${casilla.posX}`
+                            }
+                            if (casilla.posY !== 0){
+                                hijo.textContent = `${abc[casilla.posY-1]}`
+                            }
+                        }
                         document.getElementById('tablero').appendChild(hijo);
                     }
                 }

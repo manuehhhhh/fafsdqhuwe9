@@ -155,8 +155,8 @@ class Juego{
 
     //Puntos restados
     usarAtaqueAviones(id, jugadorAtacado, jugadorAgresor){
-      let casillaAtacadaXA = Math.floor(Math.random()*10);
-      let casillaAtacadaYA =  Math.floor(Math.random()*10);
+      let casillaAtacadaXA = Math.floor((Math.random()*10)+1);
+      let casillaAtacadaYA =  Math.floor((Math.random()*10)+1);
       console.log(jugadorAtacado);
       console.log("a");
       for (let i = 0; i < 5; i++){
