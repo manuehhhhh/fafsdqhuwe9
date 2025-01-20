@@ -70,11 +70,20 @@ class Juego{
               }
             }
         }
+
+
         if(this.jugadorActual+1 < this.jugadores.length){
           this.jugadorActual++;
         } else {
           this.jugadorActual = 0;
         }
+        if (this.jugadores[this.jugadorActual].timeOut > 1){
+          this.jugadores[this.jugadorActual].timeOut--;
+          this.jugadorActual = (this.jugadorActual+1 < this.jugadores.length)? this.jugadorActual+=1: 0;
+          console.log(this.jugadores[this.jugadorActual].timeOut);
+          console.log("jijijaja");
+        }
+
 
         
     }
@@ -208,6 +217,7 @@ class Juego{
       this.jugadores[indice].timeOut+=3;
       indice = devolverIndiceJugador(id, jugadorAgresor);
       this.jugadores[indice].puntosRestantes -= 25;
+      console.log(this.jugadores[indice].timeOut);
     }
 
     //Puntos restados
@@ -529,6 +539,35 @@ class Juego{
   }
   
   let juegos = new Map();
+  let torneos = new Map();
+
+  class Torneo{
+    nombreJugadores;
+    idsRondas;
+    necesitoCrear;
+    numeroDeRondas;
+    constructor(numeroDeRondas){
+      this.nombreJugadores = [];
+      this.idsRondas = [];
+      this.necesitoCrear = [];
+      for (let i = 0; i < numeroDeRondas; i++){
+        this.nombreJugadores.push([]);
+        this.idsRondas.push([]);
+        this.necesitoCrear.push(true);
+      }
+      this.numeroDeRondas = numeroDeRondas;
+    }
+
+    registrarPartidaNuevaEnRonda(nombre, id, ronda){
+      this.idsRondas[(ronda-1)].push(id);
+      this.necesitoCrear[(ronda-1)] = false;
+    }
+
+    regresarPartidaDisponibleEnRonda(ronda){
+      this.necesitoCrear[(ronda-1)] = true;
+      return this.idsRondas[(ronda-1)][this.idsRondas.length];
+    }
+  }
 
   
   function manejarMensaje(mensaje, socket){
