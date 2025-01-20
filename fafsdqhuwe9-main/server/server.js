@@ -358,6 +358,35 @@ class Juego{
   }
   
   let juegos = new Map();
+  let torneos = new Map();
+
+  class Torneo{
+    nombreJugadores;
+    idsRondas;
+    necesitoCrear;
+    numeroDeRondas;
+    constructor(numeroDeRondas){
+      this.nombreJugadores = [];
+      this.idsRondas = [];
+      this.necesitoCrear = [];
+      for (let i = 0; i < numeroDeRondas; i++){
+        this.nombreJugadores.push([]);
+        this.idsRondas.push([]);
+        this.necesitoCrear.push(true);
+      }
+      this.numeroDeRondas = numeroDeRondas;
+    }
+
+    registrarPartidaNuevaEnRonda(nombre, id, ronda){
+      this.idsRondas[(ronda-1)].push(id);
+      this.necesitoCrear[(ronda-1)] = false;
+    }
+
+    regresarPartidaDisponibleEnRonda(ronda){
+      this.necesitoCrear[(ronda-1)] = true;
+      return this.idsRondas[(ronda-1)][this.idsRondas.length];
+    }
+  }
 
   
   function manejarMensaje(mensaje, socket){
