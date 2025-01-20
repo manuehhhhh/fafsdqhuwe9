@@ -30,3 +30,6 @@ Para crear una partida solo es necesario insertar un código y el nombre del jug
 Para unirse una partida es necesario insertar el código de una sala *YA CREADA* y el nombre del jugador.
 
 Para iniciar la partida será necesario que ambos jugadores pongan todas las fichas en su tablero antes de presionar el botón 'Iniciar Juego'
+
+# Console.log()
+Esto es un aviso para informar que la mayoría de los console.log() en el programa son avisos usados para pruebas que no deberían estar en la versión final, pero, debido al tiempo, no pudieron ser eliminados del programa.
