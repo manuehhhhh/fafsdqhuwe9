@@ -88,6 +88,10 @@ main{
     background-size: cover;
 }
 
+.position.escudo[visible="true"][golpeada="false"][grupo="mar"]{
+    filter:  saturate(50deg);
+}
+
 /* ------------------------------------------------------------------------------------------------- */
 .position[grupo='portaviones'][visible='true'][golpeada='false']{
     background-color: #2e579d;

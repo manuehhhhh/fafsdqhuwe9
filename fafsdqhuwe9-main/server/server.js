@@ -445,26 +445,61 @@ class Juego{
       // }
     }
 
-    ponerMinaMarina(posX,posy){
+    ponerMinaMarina(posX,posY){
       console.log('Plating Claymore 2');
-      if (this.tablero[posX][posy].grupo == 'mar'){
-        this.tablero[posX][posy].tipo = 'mina';
+      if (this.tablero[posX][posY].grupo == 'mar'){
+        this.tablero[posX][posY].tipo = 'mina';
         this.puntosRestantes -= 5; 
       }
     }
 
     establecerEscudo(posX, posY){
       console.log("casilla leida");
-      console.log(posX.toString() + "-" + posY.toString());
       this.tablero[posX][posY].escudos+= 3;
+      this.tablero[posX][posy].tipo = 'escudo';
+      if (casillaAtacadaX+1 < 11){
+        this.tablero[posX][posY].escudos+=3;
+        this.tablero[posX+1][posy].tipo = 'escudo';
+        if (casillaAtacadaY+1 < 11){
+          this.tablero[posX+1][posY+1].escudos+= 3;
+          this.tablero[posX+1][posy+1].tipo = 'escudo';
+        }
+        if (casillaAtacadaY-1 > 0){
+          this.tablero[posX+1][posY-1].escudos+= 3;
+          this.tablero[posX+1][posy-1].tipo = 'escudo';
+        }
+      }
+      if (casillaAtacadaX-1 > 0){
+        this.tablero[posX-1][posY].escudos+= 3;
+        this.tablero[posX-1][posy].tipo = 'escudo';
+        if (casillaAtacadaY+1 < 11){
+          this.tablero[posX-1][posY+1].escudos+= 3;
+          this.tablero[posX-1][posy+1].tipo = 'escudo';
+        }
+        if (casillaAtacadaY-1 > 0){
+          this.tablero[posX-1][posY-1].escudos+= 3;
+          this.tablero[posX-1][posy-1].tipo = 'escudo';
+        }
+      }
+      if (casillaAtacadaY+1 < 11){
+        this.tablero[posX][posY+1].escudos+= 3;
+        this.tablero[posX][posy+1].tipo = 'escudo';
+      }
+      if (casillaAtacadaY-1 > 0){
+        this.tablero[posX][posY-1].escudos+= 3;
+        this.tablero[posX][posy-1].tipo = 'escudo';
+      }
+
+      console.log(posX.toString() + "-" + posY.toString());
+      
       // this.tablero[posX+1][posY].escudos+= 3;
-      this.tablero[posX][posY+1].escudos+= 3;
-      this.tablero[posX+1][posY+1].escudos+= 3;
-      this.tablero[posX-1][posY].escudos+= 3;
-      this.tablero[posX][posY-1].escudos+= 3;
-      this.tablero[posX-1][posY-1].escudos+= 3;
-      this.tablero[posX+1][posY-1].escudos+= 3;
-      this.tablero[posX-1][posY+1].escudos+= 3;
+      
+      
+      
+      
+      
+      
+      
 
       this.puntosRestantes -= 15;
     }
