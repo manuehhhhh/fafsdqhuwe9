@@ -88,6 +88,7 @@ class Juego{
 
     devolverJuego(){
       let estado = JSON.stringify(new Mensaje("tablero", "estado del juego", this));
+      console.log(estado);
       for (const jugador of this.jugadores){
             jugador.socket.send(estado);
     }
@@ -388,8 +389,12 @@ class Juego{
       return this.idsRondas[(ronda-1)][this.idsRondas.length];
     }
 
+  }
 
-
+  function regresarID(socket, id){
+    console.log("oye pero yo te regrese el id");
+    console.log(id);
+    socket.send(JSON.stringify(new Mensaje("idTorneo", id, "aaa")));
   }
 
   
@@ -456,31 +461,39 @@ class Juego{
   }
 
   function generateGameId() {
-    let idAleatorio = Math.random().toString(36).substring(2, 10)
+    let idAleatorio = Math.random().toString(36).substring(2, 10);
     while ((juegos.has(idAleatorio))){
-      idAleatorio = Math.random().toString(36).substring(2, 10)
+      idAleatorio = Math.random().toString(36).substring(2, 10);
     }
     return idAleatorio;
   }
 
   function crearTorneo(socket, mensaje){
+    console.log("crear torneo");
     torneos.set(mensaje.torneo.idTorneo, new Torneo(mensaje.torneo.numeroDeRondas));
     let idAleatorio = generateGameId();
+    regresarID(socket, idAleatorio);
     crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
-    torneos.get(mensaje.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
+    torneos.get(mensaje.torneo.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
+    console.log(juegos.get(idAleatorio));
+    console.log("crear torneo fin");
   }
 
   function unirmeSiguienteRonda(socket, mensaje){
+    console.log("unirse torneo a");
     let partidaId = '';
     if (torneos.get(mensaje.idTorneo)[mensaje.ronda].necesitoCrear){
       let idAleatorio = generateGameId();
+      regresarID(socket, idAleatorio);
       crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
       torneos.get(mensaje.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
     } else {
       partidaId = torneos.get(mensaje.idTorneo).regresarPartidaDisponible(mensaje.ronda);
+      regresarID(socket, partidaId);
       juegos.get(partidaId).insertarNuevoJugador(mensaje.jugador, socket);
       actualizarJuego(partidaId);
     }
+    console.log("unirse torneo b");
   }
 
   function powerUp(mensaje, socket){
@@ -518,7 +531,7 @@ class Juego{
     while (j < longitud){
       console.log(j);
       console.log("hu");
-      console.log(juegos.get(id).jugadores[j].nombre);
+      console.log(juegos.get(id).jugadores[j]);
       console.log(nombre);
       console.log("hu");
       if (juegos.get(id).jugadores[j].nombre == nombre){

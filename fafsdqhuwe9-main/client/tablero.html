@@ -160,12 +160,18 @@
             let nombreJugador = "PlaceHolder";
             let juegoId = "1";
             let crear = "1";
+            let crearTorneo = "0";
             let orientacion = ["izq-dere", "arr-abj", "dere-izq", "abj-arr"];
             let indiceOrientacion= 0;
+            cantidadDeRondas = 1;
             let tamano = 5;
+            let ronda = 1;
             let tipo = "portaviones";
             let powerUpActivo = "disparar";
             let partidaIniciada = false;
+            let partidaDeTorneo = false;
+            let numeroDeRondas = 0;
+            let idTorneo = "";
             let mostrandoMenu;
             definirDatos();
             let botonesPosicion = document.getElementsByClassName("boton-pieza");
@@ -185,10 +191,19 @@
                     this.jugadorAfectado = afectado;
                     this.X = posX;
                     this.Y = posY;
-                    this.descripcion = descripcion;
-                    this.tablero = table;
                     this.orientacion = orientacion;
                     this.grupo = grupo;
+                }
+            }
+
+            class Torneo{
+                ronda;
+                idTorneo;
+                numeroDeRondas;
+                constructor(ronda = 0, idTorneo=0, numeroDeRondas=0){
+                    this.ronda = ronda;
+                    this.idTorneo = idTorneo;
+                    this.numeroDeRondas = numeroDeRondas;
                 }
             }
             
@@ -198,12 +213,14 @@
                 jugador;
                 jugada;
                 pieza;
-                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada'), pieza= "nada"){
+                torneo;
+                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada'), pieza= "nada", torneo = ""){
                     this.type = type;
                     this.id = id;
                     this.jugador = jugador;
                     this.jugada = jugada;
                     this.pieza = pieza;
+                    this.torneo = torneo;
                 }
             }
 
@@ -214,6 +231,14 @@
                 nombreJugador = urlParams.get('jugador');
                 juegoId = urlParams.get('id');
                 crear = urlParams.get('create');
+                ronda = urlParams.get("ronda");
+                crearTorneo = urlParams.get('torneoCrear');
+                numeroDeRondas = urlParams.get('cantidadDeRondas');
+                console.log(urlParams.get("torneo"));
+                console.log(typeof (urlParams.get("torneo")));
+                console.log((urlParams.get("torneo") !== "0"));
+                partidaDeTorneo = (urlParams.get("torneo") !== "0");
+                idTorneo = (partidaDeTorneo)? juegoId : "";
                 mostrandoMenu = nombreJugador;
                 // console.log(nombreJugador);
                 // console.log(juegoId);
@@ -310,6 +335,8 @@
                         break;
                     case "tablero":
                         juego = mensajeRecibido.tablero;
+                        console.log("dkflkfdsklkjfldsfkjlfdjklfdskljfdsjklfjkdls");
+                        console.log(juego);
                         document.getElementById("indicador-Turno").textContent = "Turno del Jugador: " + juego.jugadores[juego.jugadorActual].nombre;
                         imprimirTablero(mostrandoMenu);
                         casillas = document.getElementsByClassName("position");
@@ -328,20 +355,39 @@
                         console.log("huh");
                     break;
                     case "eliminacion":
-                        alert(mensaje.juego);
+                        alert(mensajeRecibido.juego);
+                        break;
+                    case "ganaste":
+                        break;
+                    case "idTorneo":
+                        console.log("recibi el id");
+                        console.log(mensajeRecibido.descripcion);
+                        console.log("huuh");
+                        juegoId = mensajeRecibido.descripcion;
                         break;
                 }
             });
 
             socket.addEventListener('open', (event) =>{
                 // console.log(crear);
-                if (crear == "1"){
+                if (partidaDeTorneo){
+                    if(crearTorneo == "1"){
+                        console.log("CREEEEEEEOOOO UUUUUUUNNNNNNNN TTTTTTOOOOOOOOOORRRRRRRRRNNNNNNNEEEEEEEEEOOOOOOOO");
+                        socket.send(JSON.stringify(new mensaje("crearTorneo", "irrelavente", nombreJugador, "","", new Torneo(1, idTorneo, numeroDeRondas))));
+                    } else {
+                        console.log("MEEEEEEEEEE UUUUUUUNNNNNNIIIIIIIIIIIII");
+                        socket.send(JSON.stringify(new mensaje("unirmeSiguienteRonda", "irrelevante", nombreJugador, "","", new Torneo(ronda, idTorneo))));
+                    }
+                } else {
+                    if (crear == "1"){
                     // console.log("crear");
                     enviarMensaje("create", juegoId, nombreJugador);
                 } else {
                     // console.log("unir");
                     enviarMensaje("join", juegoId, nombreJugador);
                 }
+                }
+
             });
 
             function dibujarTablero(tablero, propio){
@@ -557,10 +603,10 @@
                         casillas[i].addEventListener('drop', (e) =>{
                             tipoAux = tipo;
 
-                            console.log(orientacion[indiceOrientacion])
-                            console.log(tamano)
-                            console.log(tipo)
-                            console.log(casillas[i].getAttribute("posY"))
+                            console.log(orientacion[indiceOrientacion]);
+                            console.log(tamano);
+                            console.log(tipo);
+                            console.log(casillas[i].getAttribute("posY"));
                             console.log(casillas[i].getAttribute("posX"));
                             
                             const id = event.dataTransfer.getData('text');
