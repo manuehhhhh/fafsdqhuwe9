@@ -195,6 +195,17 @@
                     this.grupo = grupo;
                 }
             }
+
+            class Torneo{
+                ronda;
+                idTorneo;
+                numeroDeRondas;
+                constructor(ronda = 0, idTorneo=0, numeroDeRondas=0){
+                    this.ronda = ronda;
+                    this.idTorneo = idTorneo;
+                    this.numeroDeRondas = numeroDeRondas;
+                }
+            }
             
             class mensaje{
                 type;
@@ -202,12 +213,14 @@
                 jugador;
                 jugada;
                 pieza;
-                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada'), pieza= "nada"){
+                torneo;
+                constructor(type, id, jugador, jugada = new Jugada('nadie', 0, 0, 'nada'), pieza= "nada", torneo = ""){
                     this.type = type;
                     this.id = id;
                     this.jugador = jugador;
                     this.jugada = jugada;
                     this.pieza = pieza;
+                    this.torneo = torneo;
                 }
             }
 
@@ -336,13 +349,23 @@
                         console.log("huh");
                     break;
                     case "eliminacion":
-                        alert(mensaje.juego);
+                        alert(mensajeRecibido.juego);
+                        break;
+                    case "entregaId":
+                        juegoId = mensajeRecibido.juego;
                         break;
                 }
             });
 
             socket.addEventListener('open', (event) =>{
                 // console.log(crear);
+                if (partidaDeTorneo){
+                    if(crearTorneo){
+                        socket.send(JSON.stringify(new mensaje()));
+                    } else{
+                        socket.send(JSON.stringify(new mensaje()));
+                    }
+                }
                 if (crear == "1"){
                     // console.log("crear");
                     enviarMensaje("create", juegoId, nombreJugador);
