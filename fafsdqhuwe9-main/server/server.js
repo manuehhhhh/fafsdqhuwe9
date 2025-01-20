@@ -467,18 +467,21 @@ class Juego{
     torneos.set(mensaje.torneo.idTorneo, new Torneo(mensaje.torneo.numeroDeRondas));
     let idAleatorio = generateGameId();
     crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
-    torneos.get(mensaje.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
+    socket.send(JSON.stringify({type:"entregaId", id:idAleatorio}));
+    torneos.get(mensaje.torneo.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
   }
 
   function unirmeSiguienteRonda(socket, mensaje){
     let partidaId = '';
-    if (torneos.get(mensaje.idTorneo)[mensaje.ronda].necesitoCrear){
+    if (torneos.get(mensaje.torneo.idTorneo)[mensaje.torneo.ronda].necesitoCrear){
       let idAleatorio = generateGameId();
       crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
-      torneos.get(mensaje.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
+      socket.send(JSON.stringify({type:"entregaId", id:idAleatorio}));
+      torneos.get(mensaje.torneo.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
     } else {
-      partidaId = torneos.get(mensaje.idTorneo).regresarPartidaDisponible(mensaje.ronda);
+      partidaId = torneos.get(mensaje.torneo.idTorneo).regresarPartidaDisponible(mensaje.torneo.ronda);
       juegos.get(partidaId).insertarNuevoJugador(mensaje.jugador, socket);
+      socket.send(JSON.stringify({type:"entregaId", id:partidaId}));
       actualizarJuego(partidaId);
     }
   }

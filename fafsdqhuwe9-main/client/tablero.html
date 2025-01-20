@@ -169,6 +169,7 @@
             let partidaDeTorneo = false;
             let torneoId = "";
             let ronda = 0;
+            let rondasT = 0;
             let crearTorneo = false;
             let mostrandoMenu;
             definirDatos();
@@ -200,7 +201,7 @@
                 ronda;
                 idTorneo;
                 numeroDeRondas;
-                constructor(ronda = 0, idTorneo=0, numeroDeRondas=0){
+                constructor(ronda = 0, idTorneo="", numeroDeRondas=0){
                     this.ronda = ronda;
                     this.idTorneo = idTorneo;
                     this.numeroDeRondas = numeroDeRondas;
@@ -234,7 +235,8 @@
                 mostrandoMenu = nombreJugador;
                 partidaDeTorneo = (urlParams.get("torneo") =="1");
                 torneoId = juegoId;
-                ronda = urlParams.get("Ronda");
+                ronda = urlParams.get("Ronda").toString();
+                rondasT = urlParams.get("RondaT").toString();
                 crearTorneo= (urlParams.get("createTorneo") =="1");
                 // console.log(nombreJugador);
                 // console.log(juegoId);
@@ -352,7 +354,7 @@
                         alert(mensajeRecibido.juego);
                         break;
                     case "entregaId":
-                        juegoId = mensajeRecibido.juego;
+                        juegoId = mensajeRecibido.id;
                         break;
                 }
             });
@@ -361,18 +363,21 @@
                 // console.log(crear);
                 if (partidaDeTorneo){
                     if(crearTorneo){
-                        socket.send(JSON.stringify(new mensaje()));
+                        socket.send(JSON.stringify(new mensaje("crearTorneo", juegoId, nombreJugador, "", "", new Torneo(ronda, torneoId, rondasT) )));
                     } else{
-                        socket.send(JSON.stringify(new mensaje()));
+                        socket.send(JSON.stringify(new mensaje("unirmeSiguienteRonda", juegoId,nombreJugador, "", "", new Torneo(ronda, torneoId, rondasT) )));
                     }
-                }
-                if (crear == "1"){
+                } else {
+                    if (crear == "1"){
                     // console.log("crear");
                     enviarMensaje("create", juegoId, nombreJugador);
                 } else {
                     // console.log("unir");
                     enviarMensaje("join", juegoId, nombreJugador);
                 }
+
+                }
+                
             });
 
             function dibujarTablero(tablero, propio){
