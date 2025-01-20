@@ -189,6 +189,7 @@ class Juego{
     }
   }
   
+
   class Jugador{
     nombre;
     piezasrestantes;
@@ -358,6 +359,38 @@ class Juego{
   }
   
   let juegos = new Map();
+  let torneos = new Map();
+
+  class Torneo{
+    nombreJugadores;
+    idsRondas;
+    necesitoCrear;
+    numeroDeRondas;
+    constructor(numeroDeRondas){
+      this.nombreJugadores = [];
+      this.idsRondas = [];
+      this.necesitoCrear = [];
+      for (let i = 0; i < numeroDeRondas; i++){
+        this.nombreJugadores.push([]);
+        this.idsRondas.push([]);
+        this.necesitoCrear.push(true);
+      }
+      this.numeroDeRondas = numeroDeRondas;
+    }
+
+    registrarPartidaNuevaEnRonda(nombre, id, ronda){
+      this.idsRondas[(ronda-1)].push(id);
+      this.necesitoCrear[(ronda-1)] = false;
+    }
+
+    regresarPartidaDisponibleEnRonda(ronda){
+      this.necesitoCrear[(ronda-1)] = true;
+      return this.idsRondas[(ronda-1)][this.idsRondas.length];
+    }
+
+
+
+  }
 
   
   function manejarMensaje(mensaje, socket){
@@ -411,12 +444,44 @@ class Juego{
       case "emp":
             realizarEMP(socket, mensaje);
             break;
+      case "crearTorneo":
+            crearTorneo(socket, mensaje);
+            break;
+      case "unirmeSiguienteRonda":
+            unirmeSiguienteRonda(socket, mensaje);
+            break;
       default:
             mandarMensaje(socket, 'requisito no valido:' + mensaje.type);
-  
   }
   }
 
+  function generateGameId() {
+    let idAleatorio = Math.random().toString(36).substring(2, 10)
+    while ((juegos.has(idAleatorio))){
+      idAleatorio = Math.random().toString(36).substring(2, 10)
+    }
+    return idAleatorio;
+  }
+
+  function crearTorneo(socket, mensaje){
+    torneos.set(mensaje.torneo.idTorneo, new Torneo(mensaje.torneo.numeroDeRondas));
+    let idAleatorio = generateGameId();
+    crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
+    torneos.get(mensaje.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
+  }
+
+  function unirmeSiguienteRonda(socket, mensaje){
+    let partidaId = '';
+    if (torneos.get(mensaje.idTorneo)[mensaje.ronda].necesitoCrear){
+      let idAleatorio = generateGameId();
+      crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
+      torneos.get(mensaje.idTorneo).registrarPartidaNuevaEnRonda(mensaje.jugador, idAleatorio, mensaje.torneo.ronda);
+    } else {
+      partidaId = torneos.get(mensaje.idTorneo).regresarPartidaDisponible(mensaje.ronda);
+      juegos.get(partidaId).insertarNuevoJugador(mensaje.jugador, socket);
+      actualizarJuego(partidaId);
+    }
+  }
 
   function powerUp(mensaje, socket){
     switch (mensaje.jugada.powerUp) {
@@ -495,6 +560,12 @@ class Juego{
       mandarMensaje(socket, 'esta id esta siendo usada');
     }
   }
+
+  function crearJuegoIdAleatorio(socket, mensaje, idAleatorio){
+      juegos.set(idAleatorio, new Juego(mensaje.jugador, socket));
+      actualizarJuego(idAleatorio);
+  }
+  
   
   function unirseJuego(socket, mensaje){
     if (juegos.has(mensaje.id)){
