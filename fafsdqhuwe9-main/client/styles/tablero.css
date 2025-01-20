@@ -391,6 +391,11 @@ div:not([grupo='mar'])[orientacion='abj-arr']{
     transform: rotateZ(270deg);
 }
 
+div[visible='false']:not([grupo='mar']){
+    transform: rotateZ(0deg);
+}
+
+
 aside {
     width: 46%;
     padding: 2%;
@@ -582,3 +587,5 @@ div.dragHead#destructor{
     color: white;
     text-align: center;
 }
+
+
