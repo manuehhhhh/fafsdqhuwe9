@@ -41,6 +41,8 @@
                             <input type="text" name="nombre-jugador" id="nombre-jugador" maxlength="16" placeholder="Manuel Martinez" > 
                             <label for="sala-ID">ID de la sala</label>
                             <input type="text" name="sala-ID" id="sala-ID" maxlength="16" placeholder="sala1234" >
+                            <input type="checkbox" name="toggle-torneo" id="toggle-torneo" max="4" min="2" value="2">
+                            <label for="toggle-torneo">Torneo?</label>
                         </form>
                         <h4 id="boton-unirse"> Entrar</h4>
                         <!-- <a href="tablero.html">Entrar</a> -->
@@ -75,11 +77,13 @@
             // }
 
             document.getElementById('boton-unirse').addEventListener('click', () => {
-                console.log('adfa');
-                id = document.getElementById('sala-ID').value;
-                nombre = document.getElementById('nombre-jugador').value;
-                window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=0");
-
+                const id = document.getElementById('sala-ID').value;
+                const nombre = document.getElementById('nombre-jugador').value;
+                if(document.getElementById("toggle-torneo").checked){
+                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=1&torneo=1&createTorneo=0&idTorneo="+id+"&Ronda=1&RondaT=2");
+                } else {
+                    window.location.replace("tablero.html" + "?jugador=" + nombre + "&" + "id=" + id + "&create=0&torneo=0&createTorneo=0&idTorneo="+id+"&Ronda=0&RondaT=2");
+                }
             })
             // socket.addEventListener('message', (event) =>{
             //     mensaje = JSON.parse(event.data);

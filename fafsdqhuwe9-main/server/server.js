@@ -473,7 +473,7 @@ class Juego{
 
   function unirmeSiguienteRonda(socket, mensaje){
     let partidaId = '';
-    if (torneos.get(mensaje.torneo.idTorneo)[mensaje.torneo.ronda].necesitoCrear){
+    if (torneos.get(mensaje.torneo.idTorneo).necesitoCrear[mensaje.torneo.ronda]){
       let idAleatorio = generateGameId();
       crearJuegoIdAleatorio(socket, mensaje, idAleatorio);
       socket.send(JSON.stringify({type:"entregaId", id:idAleatorio}));
