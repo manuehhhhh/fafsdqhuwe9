@@ -44,49 +44,49 @@
                 </div>
                 <h2 id="titulo-powerups">Inventario de PowerUPs</h2>
                     <ul id="inventario-powerups">
-                        <li id="boton-sonar" powerUp="sonar" >Sonar 
+                        <li class="boton-sonar" powerUp="sonar">Sonar 
                             <ul class="descripcion-powerup">
                             <li>Disponible mientras el submarino no haya sido hundido.</li>
                             <li>Revela una casilla al azar de un barco enemigo.</li>
                             <li>Costo: 5 puntos por uso.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="avionesDeAtaque">Aviones de Ataque
+                        <li class="boton-sonar" powerUp="avionesDeAtaque">Aviones de Ataque
                             <ul class="descripcion-powerup">
                                 <li>Disponible mientras el portaaviones no haya sido hundido.</li>
                                 <li>Lanza hasta 5 misiles al azar en el tablero enemigo.</li>
                                 <li>Costo: 10 puntos por uso.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="minaMarina">Mina Marina
+                        <li class="boton-sonar" powerUp="minaMarina">Mina Marina
                             <ul class="descripcion-powerup">
                                 <li>Los jugadores pueden plantar una mina en su propio tablero.</li>
                                 <li>Si el enemigo ataca una mina, recibe un "hit" adicional en una casilla adyacente al azar.</li>
                                 <li>Costo: 5 puntos para plantar</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="escudoDefensivo">Escudo Defensivo
+                        <li class="boton-sonar" powerUp="escudoDefensivo">Escudo Defensivo
                             <ul class="descripcion-powerup">
                                 <li>Protege una región de 3x3 casillas durante 3 turnos.</li>
                                 <li>Los ataques en el área protegida son anulados y el enemigo recibe un mensaje de "Bloqueado".</li>
                                 <li>Costo: 15 puntos.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="misilCrucero">Misil Crucero
+                        <li class="boton-sonar" powerUp="misilCrucero">Misil Crucero
                             <ul class="descripcion-powerup">
                                 <li>Ataque dirigido a un área de 3x3 casillas.</li>
                                 <li>Costo: 15 puntos.</li>
                                 <li>Tiempo de recarga: 5 turnos.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="reparacionRapida">Reparación Rápida
+                        <li class="boton-sonar" powerUp="reparacionRapida">Reparación Rápida
                             <ul  class="descripcion-powerup">
                                 <li>Restaura hasta 2 casillas de un barco dañado (no hundido).</li>
                                 <li>Costo: 10 puntos.</li>
                                 <li>Un solo uso por barco.</li>
                             </ul>
                         </li>
-                        <li id="boton-sonar" powerUp="emp">Ataque EMP
+                        <li class="boton-sonar" powerUp="emp">Ataque EMP
                             <ul  class="descripcion-powerup">
                                 <li>Desactiva todas las funciones especiales del enemigo durante 3 turnos.</li>
                                 <li>Costo: 25 puntos.</li>
@@ -167,6 +167,9 @@
             let powerUpActivo = "disparar";
             let partidaIniciada = false;
             let mostrandoMenu;
+
+            const botones = document.querySelectorAll('.boton-sonar');
+
             definirDatos();
             let botonesPosicion = document.getElementsByClassName("boton-pieza");
             let casillas = document.getElementsByClassName("position");
@@ -554,7 +557,12 @@
                     // console.log("djlkf;a");
                     // console.log(juego.iniciado);
                     if(juego.iniciado){
-                        casillas[i].addEventListener('click', (e) =>{manejarEventosJuegoIniciado(i)})
+                        casillas[i].addEventListener('click', (e) =>{
+                            manejarEventosJuegoIniciado(i);
+                            botones.forEach(boton => {
+                                boton.style.backgroundColor = 'aliceblue';
+                            })
+                        })
                     } else {
                         casillas[i].addEventListener('dragover', function(event) {
                             event.preventDefault();
@@ -660,6 +668,18 @@
                     break;
                }           
             }
+            
+            botones.forEach(boton => {
+                boton.addEventListener('click', function(){
+                    if (this.style.backgroundColor === 'red'){
+                            this.style.backgroundColor = 'aliceblue';
+                    }
+                    else{
+                        botones.forEach(c => {c.style.backgroundColor='aliceblue'}); 
+                        this.style.backgroundColor = 'red';
+                    }
+                })
+            })
         </script>
 
 </body>

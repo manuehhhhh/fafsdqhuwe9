@@ -463,6 +463,11 @@ ul#inventario-powerups li{
     font-size: 1.5rem;
     background-color: aliceblue;
 }
+
+ul#inventario-powerups li::selection{
+    background-color: aquamarine;
+}
+
 ul#inventario-powerups li:hover{
     background-color: lightblue;
 }
