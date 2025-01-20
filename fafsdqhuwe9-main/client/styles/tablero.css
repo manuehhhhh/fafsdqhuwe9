@@ -89,7 +89,8 @@ main{
 }
 
 .position.escudo[visible="true"][golpeada="false"][grupo="mar"]{
-    filter:  saturate(50deg);
+    filter:  brightness(180%);
+    
 }
 
 /* ------------------------------------------------------------------------------------------------- */

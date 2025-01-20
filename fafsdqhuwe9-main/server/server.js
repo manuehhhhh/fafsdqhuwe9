@@ -466,50 +466,39 @@ class Juego{
     establecerEscudo(posX, posY){
       console.log("casilla leida");
       this.tablero[posX][posY].escudos+= 3;
-      this.tablero[posX][posy].tipo = 'escudo';
-      if (casillaAtacadaX+1 < 11){
+      this.tablero[posX][posY].tipo = 'escudo';
+      if (posX+1 < 11){
         this.tablero[posX][posY].escudos+=3;
-        this.tablero[posX+1][posy].tipo = 'escudo';
-        if (casillaAtacadaY+1 < 11){
+        this.tablero[posX+1][posY].tipo = 'escudo';
+        if (posY+1 < 11){
           this.tablero[posX+1][posY+1].escudos+= 3;
-          this.tablero[posX+1][posy+1].tipo = 'escudo';
+          this.tablero[posX+1][posY+1].tipo = 'escudo';
         }
-        if (casillaAtacadaY-1 > 0){
+        if (posY-1 > 0){
           this.tablero[posX+1][posY-1].escudos+= 3;
-          this.tablero[posX+1][posy-1].tipo = 'escudo';
+          this.tablero[posX+1][posY-1].tipo = 'escudo';
         }
       }
-      if (casillaAtacadaX-1 > 0){
+      if (posX-1 > 0){
         this.tablero[posX-1][posY].escudos+= 3;
-        this.tablero[posX-1][posy].tipo = 'escudo';
-        if (casillaAtacadaY+1 < 11){
+        this.tablero[posX-1][posY].tipo = 'escudo';
+        if (posY+1 < 11){
           this.tablero[posX-1][posY+1].escudos+= 3;
-          this.tablero[posX-1][posy+1].tipo = 'escudo';
+          this.tablero[posX-1][posY+1].tipo = 'escudo';
         }
-        if (casillaAtacadaY-1 > 0){
+        if (posY-1 > 0){
           this.tablero[posX-1][posY-1].escudos+= 3;
-          this.tablero[posX-1][posy-1].tipo = 'escudo';
+          this.tablero[posX-1][posY-1].tipo = 'escudo';
         }
       }
-      if (casillaAtacadaY+1 < 11){
+      if (posY+1 < 11){
         this.tablero[posX][posY+1].escudos+= 3;
-        this.tablero[posX][posy+1].tipo = 'escudo';
+        this.tablero[posX][posY+1].tipo = 'escudo';
       }
-      if (casillaAtacadaY-1 > 0){
+      if (posY-1 > 0){
         this.tablero[posX][posY-1].escudos+= 3;
-        this.tablero[posX][posy-1].tipo = 'escudo';
+        this.tablero[posX][posY-1].tipo = 'escudo';
       }
-
-      console.log(posX.toString() + "-" + posY.toString());
-      
-      // this.tablero[posX+1][posY].escudos+= 3;
-      
-      
-      
-      
-      
-      
-      
 
       this.puntosRestantes -= 15;
     }
