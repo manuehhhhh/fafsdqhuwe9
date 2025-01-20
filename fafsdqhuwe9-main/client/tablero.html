@@ -575,12 +575,13 @@
                             const elementoDragged = document.getElementById(id);
 
                             console.log(`asjjsakdjsakl: ${document.getElementById(id)}`)
-
-                            if (insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged) !== 'salido'){
-                                let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero(), casillas[i].getAttribute("orientacion"), casillas[i].getAttribute("grupo")), tipo);
-        
-                                console.log(`MIRAME: ${mandar}`);
-                                socket.send(JSON.stringify(mandar));
+                            if (casillas[i].getAttribute('posY') > 0 && casillas[i].getAttribute('posX') > 0){
+                                if (insertarBarco(orientacion[indiceOrientacion], Number(tamano), tipo, casillas[i].getAttribute("posY"), casillas[i].getAttribute("posX"), elementoDragged) !== 'salido'){
+                                    let mandar = new mensaje("establecerTablero", juegoId, nombreJugador,new Jugada(nombreJugador, casillas[i].getAttribute("posX"), casillas[i].getAttribute("posY"), "tablero", obtenerTablero(), casillas[i].getAttribute("orientacion"), casillas[i].getAttribute("grupo")), tipo);
+            
+                                    console.log(`MIRAME: ${mandar}`);
+                                    socket.send(JSON.stringify(mandar));
+                                }
                             }
                         })
                     }
